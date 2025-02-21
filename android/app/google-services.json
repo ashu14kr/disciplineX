@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "694666692847",
+    "project_id": "disciplinex-bbc12",
+    "storage_bucket": "disciplinex-bbc12.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694666692847:android:55c3e3f46394db7e9db31a",
+        "android_client_info": {
+          "package_name": "com.example.anti_procastination"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAglYbACi3zvZFv0z5xswsVDTS9O9YlXlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
