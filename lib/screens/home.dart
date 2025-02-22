@@ -27,6 +27,64 @@ class _HomeState extends State<Home> {
   Timer? _timer;
   bool _isRunning = false;
 
+  _checkAndResumeTask() async {
+    TaskModel? tasker;
+    try {
+      tasker = taskModel.firstWhere((e) => e.startedAt != null);
+    } catch (e) {
+      tasker = null;
+    }
+
+    if (tasker == null) {
+      return;
+    }
+
+    DateTime startedAt = DateTime.parse(tasker.startedAt!);
+    Duration elapsed = DateTime.now().difference(startedAt);
+
+    int totalHours = int.parse(tasker.completionTime.split(" ")[0]);
+    Duration totalDuration = Duration(hours: totalHours);
+
+    Duration remaining = totalDuration - elapsed;
+    if (remaining.isNegative) {
+      await task.updateTaskStatus(tasker.id);
+      remaining = Duration.zero;
+    }
+    setState(() {
+      _remainingSeconds = remaining.inSeconds;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Resuming task started at ${tasker.startedAt}"),
+        duration: const Duration(seconds: 3),
+      ),
+    );
+
+    _startTimer();
+  }
+
+  double _calculateProgress() {
+    // Attempt to find the first task with a non-null startedAt.
+    TaskModel tasker;
+    try {
+      tasker = taskModel.firstWhere((e) => e.startedAt != null);
+    } catch (e) {
+      // No task found with a startedAt value.
+      return 0.0;
+    }
+
+    // Extract total hours from the completionTime string (e.g., "1 hour")
+    int totalHours = int.parse(tasker.completionTime.split(" ")[0]);
+    int totalDurationSeconds = totalHours * 3600;
+
+    // Guard against divide-by-zero.
+    if (totalDurationSeconds == 0) return 0.0;
+
+    // Calculate and return the progress fraction (0.0 to 1.0)
+    return _remainingSeconds / totalDurationSeconds;
+  }
+
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
@@ -57,6 +115,7 @@ class _HomeState extends State<Home> {
           taskModel.add(e);
         });
       });
+      _checkAndResumeTask();
     }
   }
 
@@ -69,7 +128,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    double progress = _remainingSeconds / 300;
     return Scaffold(
       backgroundColor: Colors.white,
       floatingActionButton: Padding(
@@ -193,7 +251,7 @@ class _HomeState extends State<Home> {
             ),
             Center(
               child: CustomPaint(
-                painter: SquareProgressPainter(1),
+                painter: SquareProgressPainter(_calculateProgress()),
                 child: Container(
                   height: size.height * 0.1,
                   width: size.width * 0.7,
@@ -218,37 +276,47 @@ class _HomeState extends State<Home> {
               height: 30,
             ),
             Center(
-              child: Container(
-                height: size.height * 0.05,
-                width: size.width * 0.4,
-                decoration: BoxDecoration(
-                  // color: const Color.fromARGB(255, 238, 255, 175),
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(
-                    12,
-                  ),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2,
-                  ),
-
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 3,
-                      offset: Offset(
-                        3,
-                        2,
-                      ),
+              child: InkWell(
+                onTap: () async {
+                  if (taskModel.any((e) => e.startedAt != null)) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("There is one onoging task!")));
+                    return;
+                  }
+                  await task.updateTask(taskModel[0].id);
+                  int hours =
+                      int.parse(taskModel[0].completionTime.substring(0, 1));
+                  _remainingSeconds = hours * 3600;
+                  _startTimer();
+                },
+                child: Container(
+                  height: size.height * 0.05,
+                  width: size.width * 0.4,
+                  decoration: BoxDecoration(
+                    // color: const Color.fromARGB(255, 238, 255, 175),
+                    color: taskModel.any((e) => e.startedAt != null)
+                        ? const Color.fromARGB(255, 255, 255, 255)
+                        : Colors.lightGreen,
+                    borderRadius: BorderRadius.circular(
+                      12,
                     ),
-                  ],
-                ),
-                child: Center(
-                  child: InkWell(
-                    onTap: () {
-                      _remainingSeconds = 200;
-                      _startTimer();
-                    },
+                    border: Border.all(
+                      color: Colors.black,
+                      width: 2,
+                    ),
+
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 3,
+                        offset: Offset(
+                          3,
+                          2,
+                        ),
+                      ),
+                    ],
+                  ),
+                  child: Center(
                     child: Text(
                       "DO IT NOW",
                       textAlign: TextAlign.center,
@@ -304,6 +372,37 @@ class TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String monthName(int month) {
+      switch (month) {
+        case 1:
+          return "Jan";
+        case 2:
+          return "Feb";
+        case 3:
+          return "Mar";
+        case 4:
+          return "Apr";
+        case 5:
+          return "May";
+        case 6:
+          return "Jun";
+        case 7:
+          return "Jul";
+        case 8:
+          return "Aug";
+        case 9:
+          return "Sep";
+        case 10:
+          return "Oct";
+        case 11:
+          return "Nov";
+        case 12:
+          return "Dec";
+        default:
+          return "Unknown";
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: Container(
@@ -380,7 +479,7 @@ class TaskWidget extends StatelessWidget {
                     size: 16,
                   ),
                   Text(
-                    "${taskModel.createdAt.day.toString()} - ${taskModel.createdAt.month.toString()}",
+                    " ${taskModel.createdAt.day.toString()} ${monthName(taskModel.createdAt.month)}",
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                           color: Colors.black,
                         ),
@@ -396,7 +495,9 @@ class TaskWidget extends StatelessWidget {
                     height: 35,
                     width: size.width * 0.3,
                     decoration: BoxDecoration(
-                      color: mainColor,
+                      color: taskModel.startedAt != null
+                          ? Colors.lightGreen
+                          : mainColor,
                       border: Border.all(
                         color: Colors.black,
                         width: 1,
@@ -409,7 +510,7 @@ class TaskWidget extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "START NOW",
+                        taskModel.startedAt != null ? "Running" : "START NOW",
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: Colors.white,

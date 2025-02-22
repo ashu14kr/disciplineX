@@ -5,41 +5,49 @@ TaskModel taskModelFromJson(String str) => TaskModel.fromJson(json.decode(str));
 String taskModelToJson(TaskModel data) => json.encode(data.toJson());
 
 class TaskModel {
+  String id;
+  int bet;
+  String completionTime;
+  DateTime createdAt;
+  String name;
+  String priority;
+  dynamic startedAt;
   String status;
   String uid;
-  int bet;
-  DateTime createdAt;
-  String priority;
-  String completionTime;
-  String name;
 
   TaskModel({
+    required this.id,
+    required this.bet,
+    required this.completionTime,
+    required this.createdAt,
+    required this.name,
+    required this.priority,
+    required this.startedAt,
     required this.status,
     required this.uid,
-    required this.bet,
-    required this.createdAt,
-    required this.priority,
-    required this.completionTime,
-    required this.name,
   });
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
+        id: json["_id"],
+        bet: json["bet"],
+        completionTime: json["completionTime"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        name: json["name"],
+        priority: json["priority"],
+        startedAt: json["startedAt"],
         status: json["status"],
         uid: json["uid"],
-        bet: json["bet"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        priority: json["priority"],
-        completionTime: json["completionTime"],
-        name: json["name"],
       );
 
   Map<String, dynamic> toJson() => {
+        "_id": id,
+        "bet": bet,
+        "completionTime": completionTime,
+        "createdAt": createdAt.toIso8601String(),
+        "name": name,
+        "priority": priority,
+        "startedAt": startedAt,
         "status": status,
         "uid": uid,
-        "bet": bet,
-        "createdAt": createdAt.toIso8601String(),
-        "priority": priority,
-        "completionTime": completionTime,
-        "name": name,
       };
 }
