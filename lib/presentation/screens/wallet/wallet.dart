@@ -1,7 +1,7 @@
-import 'package:anti_procastination/screens/addbalance.dart';
+import 'package:anti_procastination/presentation/screens/wallet/addbalance.dart';
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
+import '../../../constants.dart';
 
 class Wallet extends StatelessWidget {
   const Wallet({super.key});

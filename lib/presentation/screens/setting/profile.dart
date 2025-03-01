@@ -1,5 +1,5 @@
-import 'package:anti_procastination/screens/bounty.dart';
-import 'package:anti_procastination/screens/login.dart';
+import 'package:anti_procastination/presentation/screens/setting/bounty.dart';
+import 'package:anti_procastination/presentation/screens/onboarding/login.dart';
 import 'package:anti_procastination/storage/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

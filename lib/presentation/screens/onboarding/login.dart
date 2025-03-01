@@ -1,7 +1,7 @@
 import 'package:anti_procastination/auth_service.dart';
 import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/core/services/task.dart';
-import 'package:anti_procastination/screens/home.dart';
+import 'package:anti_procastination/presentation/screens/home/home.dart';
 import 'package:anti_procastination/storage/storage.dart';
 import 'package:flutter/material.dart';
 
