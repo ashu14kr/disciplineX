@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:anti_procastination/presentation/screens/home/home.dart';
 import 'package:anti_procastination/presentation/screens/onboarding/login.dart';
-import 'package:anti_procastination/presentation/screens/onboarding/onboarding.dart';
 import 'package:flutter/material.dart';
 
 import '../../../storage/model/local_user_model.dart';
@@ -27,9 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
             context, MaterialPageRoute(builder: (context) => const Home()));
       } else {
         Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const Onboarding()));
-        // Navigator.pushReplacement(context,
-        //     MaterialPageRoute(builder: (context) => const LoginScreen()));
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
       }
     });
     super.initState();

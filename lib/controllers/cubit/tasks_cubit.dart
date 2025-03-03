@@ -15,12 +15,13 @@ class TasksCubit extends Cubit<TasksState> {
   Task task = Task();
   Timer? _timer;
   int remainingSecondsss = 0;
+  int total = 0;
+  String uuid = "";
 
   void getTasks(String uid) async {
     final tasks = await task.getTasks(uid);
-
+    uuid = uid;
     emit(TasksLoaded(task: tasks));
-
     checkAndResumeTask(tasks);
   }
 
@@ -40,23 +41,20 @@ class TasksCubit extends Cubit<TasksState> {
 
     final DateTime startedAt = DateTime.parse(ongoingTask.startedAt!);
     final Duration elapsed = DateTime.now().difference(startedAt);
-    final int totalHours = int.parse(ongoingTask.completionTime.split(" ")[0]);
-    final Duration totalDuration = Duration(hours: totalHours);
+    final int totalHours = ongoingTask.completionTime;
+    final Duration totalDuration = Duration(minutes: totalHours);
 
     remainingSecondsss = (totalDuration - elapsed).inSeconds;
-
-    // print(remainingSeconds);
+    total = totalDuration.inSeconds;
 
     if (remainingSecondsss <= 0) {
       task.updateTaskStatus(ongoingTask.id);
+      final utasks = await task.getTasks(uuid);
+      emit(TasksLoaded(task: utasks));
       remainingSecondsss = 0;
     }
 
     if (remainingSecondsss > 0) {
-      emit(TaskResumed(
-        task: tasks,
-        remainingSeconds: remainingSecondsss,
-      ));
       startTimer(remainingSecondsss, tasks);
     }
   }
@@ -68,14 +66,14 @@ class TasksCubit extends Cubit<TasksState> {
         remainingSecondsss--;
         emit(
           TaskResumed(
-            task: tasks != null ? List.from(tasks) : [],
-            remainingSeconds: 1,
+            remainingSecondsss / total,
+            task: tasks,
+            remainingSeconds: remainingSecondsss,
           ),
         );
-
-        // print("Emitting: $remainingSecondsss");
       } else {
         timer.cancel();
+        checkAndResumeTask(tasks);
       }
     });
   }

@@ -4,6 +4,7 @@ import 'package:anti_procastination/presentation/screens/onboarding/splash.dart'
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'DiscplineX',
         debugShowCheckedModeBanner: false,
+        builder: EasyLoading.init(),
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

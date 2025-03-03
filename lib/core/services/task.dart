@@ -12,7 +12,7 @@ class Task {
     await db.collection("Users").doc(uid).set(user);
   }
 
-  addTask(String name, String priority, String completionTime, String status,
+  addTask(String name, String priority, int completionTime, String status,
       int bet, String uid) async {
     final docRef = db.collection("Tasks").doc();
 

@@ -165,9 +165,9 @@ class TaskWidget extends StatelessWidget {
         height: 160,
         width: size.width * 0.9,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color.fromARGB(255, 35, 35, 35),
           border: Border.all(
-            color: Colors.black,
+            color: Colors.white,
             width: 2,
           ),
           borderRadius: const BorderRadius.only(
@@ -175,16 +175,16 @@ class TaskWidget extends StatelessWidget {
             bottomRight: Radius.circular(16),
             bottomLeft: Radius.circular(16),
           ),
-          boxShadow: const [
-            BoxShadow(
-              color: mainColor,
-              blurRadius: 12,
-              offset: Offset(
-                4,
-                4,
-              ),
-            ),
-          ],
+          // boxShadow: const [
+          //   BoxShadow(
+          //     color: mainColor,
+          //     blurRadius: 3,
+          //     offset: Offset(
+          //       4,
+          //       4,
+          //     ),
+          //   ),
+          // ],
         ),
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -227,6 +227,7 @@ class TaskWidget extends StatelessWidget {
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
+                        color: Colors.white,
                       ),
                 ),
               ),
@@ -238,11 +239,13 @@ class TaskWidget extends StatelessWidget {
                   const Icon(
                     Icons.calendar_today,
                     size: 16,
+                    color: Colors.white,
                   ),
                   Text(
                     " ${taskModel.createdAt.day.toString()} ${monthName(taskModel.createdAt.month)}",
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: Colors.black,
+                          color: Colors.white,
+                          fontSize: 14,
                         ),
                   ),
                 ],
@@ -296,7 +299,7 @@ class TaskWidget extends StatelessWidget {
                     "\$${taskModel.bet}",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 16,
                         ),
                   ),
@@ -309,10 +312,10 @@ class TaskWidget extends StatelessWidget {
                     size: 24,
                   ),
                   Text(
-                    "${taskModel.completionTime}",
+                    "${taskModel.completionTime} Mins",
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 16,
                         ),
                   ),

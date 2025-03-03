@@ -14,11 +14,19 @@ final class TasksLoaded extends TasksState {
   final List<TaskModel>? task;
 
   const TasksLoaded({required this.task});
+
+  @override
+  List<Object> get props => [task ?? []];
 }
 
 final class TaskResumed extends TasksState {
   final int remainingSeconds;
+  final double progress;
   final List<TaskModel>? task;
 
-  const TaskResumed({required this.remainingSeconds, required this.task});
+  const TaskResumed(this.progress,
+      {required this.remainingSeconds, required this.task});
+
+  @override
+  List<Object> get props => [remainingSeconds, progress, task ?? []];
 }

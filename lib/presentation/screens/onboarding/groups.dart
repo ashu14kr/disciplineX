@@ -1,6 +1,8 @@
 import 'package:anti_procastination/constants.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:anti_procastination/presentation/screens/onboarding/create_group.dart';
 import 'package:flutter/material.dart';
+
+import 'helper_widget.dart';
 
 class Groups extends StatefulWidget {
   const Groups({super.key});
@@ -10,24 +12,6 @@ class Groups extends StatefulWidget {
 }
 
 class _GroupsState extends State<Groups> {
-  final List<Map<String, dynamic>> groups = [
-    {
-      "name": "Fitness Warriors",
-      "description": "Achieve your fitness goals with a supportive community.",
-      "members": 12
-    },
-    {
-      "name": "Healthy Living",
-      "description": "Join others dedicated to building healthy habits.",
-      "members": 8
-    },
-    {
-      "name": "Mindful Achievers",
-      "description": "Stay focused and reach your dreams together.",
-      "members": 15
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +28,14 @@ class _GroupsState extends State<Groups> {
               color: Colors.black,
               size: 30,
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CreateGroupScreen(),
+                ),
+              );
+            },
           ),
           IconButton(
             icon: const Icon(
@@ -137,12 +128,6 @@ class _GroupsState extends State<Groups> {
                                     decoration: BoxDecoration(
                                       color: Colors.black,
                                       borderRadius: BorderRadius.circular(12),
-                                      boxShadow: const [
-                                        // BoxShadow(
-                                        //   color: Colors.black,
-                                        //   blurRadius: 4,
-                                        // ),
-                                      ],
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(

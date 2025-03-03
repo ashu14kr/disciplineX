@@ -1,7 +1,8 @@
 import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/presentation/screens/onboarding/ask_questions.dart';
-import 'package:anti_procastination/presentation/screens/onboarding/groups.dart';
 import 'package:flutter/material.dart';
+
+import 'helper_widget.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -11,21 +12,6 @@ class Onboarding extends StatefulWidget {
 }
 
 class _OnboardingState extends State<Onboarding> {
-  // List of available tags
-  final List<String> availableTags = [
-    "Career Growth",
-    "Fitness",
-    "Coding",
-    "Entrepreneurship",
-    "Personal Development",
-    "Academic",
-    "Creative",
-    "Financial Success",
-  ];
-
-  // Set to store selected tags
-  String selectedTags = "";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,33 +87,22 @@ class _OnboardingState extends State<Onboarding> {
             ),
             Center(
               child: GestureDetector(
-                onTap: selectedTags.isEmpty
-                    ? null
-                    : () {
-                        // Proceed to the next step (for now, we print selected tags)
-                        print("Selected tags: $selectedTags");
-                        // For demonstration, show selected tags in an alert dialog
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (_) => AlertDialog(
-                        //     title: const Text("Tags Selected"),
-                        //     content: Text(selectedTags),
-                        //     actions: [
-                        //       TextButton(
-                        //         onPressed: () => Navigator.pop(context),
-                        //         child: const Text("OK"),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // );
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AskQuestions(),
-                          ),
-                        );
-                      },
+                onTap: () {
+                  if (selectedTags.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please Select a Tag"),
+                      ),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AskQuestions(),
+                      ),
+                    );
+                  }
+                },
                 child: Container(
                   width: 130,
                   height: 40,
@@ -140,10 +115,6 @@ class _OnboardingState extends State<Onboarding> {
                         blurRadius: 4,
                       ),
                     ],
-                    // border: Border.all(
-                    //   color: Colors.black,
-                    //   width: 2,
-                    // ),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(

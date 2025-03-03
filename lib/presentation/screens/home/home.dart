@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:anti_procastination/presentation/screens/home/addtask.dart';
@@ -7,6 +5,7 @@ import 'package:anti_procastination/presentation/screens/setting/profile.dart';
 import 'package:anti_procastination/presentation/screens/wallet/wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import '../../../core/services/task.dart';
 import '../../../storage/model/local_user_model.dart';
@@ -25,79 +24,6 @@ class _HomeState extends State<Home> {
   Task task = Task();
   List<TaskModel> taskModel = [];
   int _remainingSeconds = 0;
-  Timer? _timer;
-  bool _isRunning = false;
-
-  // _checkAndResumeTask() async {
-  //   TaskModel? tasker;
-  //   try {
-  //     tasker = taskModel.firstWhere((e) => e.startedAt != null);
-  //   } catch (e) {
-  //     tasker = null;
-  //   }
-
-  //   if (tasker == null) {
-  //     return;
-  //   }
-
-  //   DateTime startedAt = DateTime.parse(tasker.startedAt!);
-  //   Duration elapsed = DateTime.now().difference(startedAt);
-
-  //   int totalHours = int.parse(tasker.completionTime.split(" ")[0]);
-  //   Duration totalDuration = Duration(hours: totalHours);
-
-  //   Duration remaining = totalDuration - elapsed;
-  //   if (remaining.isNegative) {
-  //     await task.updateTaskStatus(tasker.id);
-  //     remaining = Duration.zero;
-  //   }
-  //   setState(() {
-  //     _remainingSeconds = remaining.inSeconds;
-  //   });
-
-  //   ScaffoldMessenger.of(context).showSnackBar(
-  //     SnackBar(
-  //       content: Text("Resuming task started at ${tasker.startedAt}"),
-  //       duration: const Duration(seconds: 3),
-  //     ),
-  //   );
-
-  //   _startTimer();
-  // }
-
-  double _calculateProgress() {
-    // Attempt to find the first task with a non-null startedAt.
-    TaskModel tasker;
-    try {
-      tasker = taskModel.firstWhere((e) => e.startedAt != null);
-    } catch (e) {
-      // No task found with a startedAt value.
-      return 0.0;
-    }
-
-    // Extract total hours from the completionTime string (e.g., "1 hour")
-    int totalHours = int.parse(tasker.completionTime.split(" ")[0]);
-    int totalDurationSeconds = totalHours * 3600;
-
-    // Guard against divide-by-zero.
-    if (totalDurationSeconds == 0) return 0.0;
-
-    // Calculate and return the progress fraction (0.0 to 1.0)
-    return _remainingSeconds / totalDurationSeconds;
-  }
-
-  // void _startTimer() {
-  //   _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-  //     if (_remainingSeconds > 0) {
-  //       setState(() {
-  //         _remainingSeconds--;
-  //       });
-  //     } else {
-  //       timer.cancel();
-  //       // Timer reached zero, perform any desired action here.
-  //     }
-  //   });
-  // }
 
   String formatTime(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -111,13 +37,6 @@ class _HomeState extends State<Home> {
     LocalUserModel? response = await storage.getSignInInfo();
     if (response?.uuid != null) {
       context.read<TasksCubit>().getTasks(response!.uuid);
-      // final tasks = await task.getTasks(response!.uuid);
-      // tasks?.forEach((e) {
-      //   setState(() {
-      //     taskModel.add(e);
-      //   });
-      // });
-      // _checkAndResumeTask();
     }
   }
 
@@ -133,7 +52,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
       floatingActionButton: CustomFloatingBtn(
         size: size,
         onTap: () {
@@ -145,233 +64,340 @@ class _HomeState extends State<Home> {
           );
         },
       ),
-      appBar: AppBar(
-        title: Text(
-          "DisciplineX",
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Profile(),
-              ),
-            );
-          },
-          icon: const Icon(
-            Icons.settings_outlined,
-            size: 30,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Wallet(),
-                ),
-              );
-            },
-            icon: const Icon(
-              Icons.wallet,
-              size: 30,
-            ),
-          ),
-        ],
-        backgroundColor: Colors.white,
-        elevation: 0,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            Center(
-              child: CustomPaint(
-                painter: SquareProgressPainter(_calculateProgress()),
-                child: Container(
-                  height: size.height * 0.1,
-                  width: size.width * 0.7,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      16,
+      // appBar: AppBar(
+      //   title: Text(
+      //     "DisciplineX",
+      //     style: Theme.of(context)
+      //         .textTheme
+      //         .headlineSmall!
+      //         .copyWith(color: Colors.white),
+      //   ),
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => const Profile(),
+      //         ),
+      //       );
+      //     },
+      //     icon: const Icon(
+      //       Icons.settings_outlined,
+      //       size: 30,
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      //   actions: [
+      //     IconButton(
+      //       onPressed: () {
+      //         Navigator.push(
+      //           context,
+      //           MaterialPageRoute(
+      //             builder: (context) => const Wallet(),
+      //           ),
+      //         );
+      //       },
+      //       icon: const Icon(
+      //         Icons.wallet,
+      //         size: 30,
+      //         color: Colors.white,
+      //       ),
+      //     ),
+      //   ],
+      //   backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+      //   elevation: 0,
+      // ),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Profile(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.settings_outlined,
+                        size: 30,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: BlocBuilder<TasksCubit, TasksState>(
-                      buildWhen: (previous, current) => true,
-                      builder: (context, state) {
-                        if (state is TasksInitial) {
-                          return Text(
-                            "00 : 00 : 00",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.displayMedium,
-                          );
-                        } else if (state is TaskResumed) {
-                          print(state.remainingSeconds);
-                          return Text(
-                            formatTime(
-                              Duration(
-                                seconds: state.remainingSeconds,
+                    Text(
+                      "DisciplineX",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall!
+                          .copyWith(color: Colors.white),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Wallet(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.wallet,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+                Center(
+                  child: BlocBuilder<TasksCubit, TasksState>(
+                    builder: (context, state) {
+                      if (state is TaskResumed) {
+                        return CustomPaint(
+                          painter: SquareProgressPainter(state.progress),
+                          child: Container(
+                            height: size.height * 0.1,
+                            width: size.width * 0.7,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                16,
                               ),
                             ),
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.displayMedium,
-                          );
-                        } else {
-                          return Text(
-                            "00 : 00 : 00",
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.displayMedium,
-                          );
-                        }
-                      },
-                    ),
+                            child: Center(
+                              child: Text(
+                                formatTime(
+                                  Duration(
+                                    seconds: state.remainingSeconds,
+                                  ),
+                                ),
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else if (state is TasksInitial) {
+                        return CustomPaint(
+                          painter: SquareProgressPainter(0.0),
+                          child: Container(
+                            height: size.height * 0.1,
+                            width: size.width * 0.7,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                16,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "00:00:00",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return CustomPaint(
+                          painter: SquareProgressPainter(0.0),
+                          child: Container(
+                            height: size.height * 0.1,
+                            width: size.width * 0.7,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                16,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "00:00:00",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium!
+                                    .copyWith(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Center(
-              child: InkWell(
-                onTap: () async {
-                  // if (taskModel.any((e) => e.startedAt != null)) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  //       content: Text("There is one onoging task!")));
-                  //   return;
-                  // }
-                  // await task.updateTask(taskModel[0].id);
-                  // int hours =
-                  //     int.parse(taskModel[0].completionTime.substring(0, 1));
-                  // _remainingSeconds = hours * 3600;
-                  // _startTimer();
-                },
-                child: Container(
-                  height: size.height * 0.05,
-                  width: size.width * 0.4,
-                  decoration: BoxDecoration(
-                    // color: const Color.fromARGB(255, 238, 255, 175),
-                    color: taskModel.any((e) => e.startedAt != null)
-                        ? const Color.fromARGB(255, 255, 255, 255)
-                        : Colors.lightGreen,
-                    borderRadius: BorderRadius.circular(
-                      12,
-                    ),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 2,
-                    ),
-
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 3,
-                        offset: Offset(
-                          3,
-                          2,
+                const SizedBox(
+                  height: 30,
+                ),
+                Center(
+                  child: InkWell(
+                    onTap: () async {
+                      // if (taskModel.any((e) => e.startedAt != null)) {
+                      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      //       content: Text("There is one onoging task!")));
+                      //   return;
+                      // }
+                      // await task.updateTask(taskModel[0].id);
+                      // int hours =
+                      //     int.parse(taskModel[0].completionTime.substring(0, 1));
+                      // _remainingSeconds = hours * 3600;
+                      // _startTimer();
+                    },
+                    child: Container(
+                      height: size.height * 0.05,
+                      width: size.width * 0.4,
+                      decoration: BoxDecoration(
+                        // color: const Color.fromARGB(255, 238, 255, 175),
+                        color: taskModel.any((e) => e.startedAt != null)
+                            ? const Color.fromARGB(255, 255, 255, 255)
+                            : Colors.lightGreen,
+                        borderRadius: BorderRadius.circular(
+                          12,
                         ),
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 2,
+                        ),
+
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black,
+                            blurRadius: 3,
+                            offset: Offset(
+                              3,
+                              2,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      "DO IT NOW",
-                      textAlign: TextAlign.center,
-                      style:
-                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      child: Center(
+                        child: Text(
+                          "DO IT NOW",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 19,
                               ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  "TASKS",
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                BlocBuilder<TasksCubit, TasksState>(
+                  builder: (context, state) {
+                    if (state is TasksInitial) {
+                      return Container();
+                    } else if (state is TasksLoaded) {
+                      return SizedBox(
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.task?.length,
+                            itemBuilder: (context, index) {
+                              return TaskWidget(
+                                size: size,
+                                taskModel: state.task![index],
+                                ontap: () async {
+                                  if (state.task!
+                                      .any((e) => e.startedAt != null)) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text("There is one onoging task!"),
+                                      ),
+                                    );
+                                    return;
+                                  }
+                                  EasyLoading.show();
+                                  await task.updateTask(state.task![index].id);
+                                  int min = state.task![index].completionTime;
+                                  _remainingSeconds = min * 60;
+                                  context.read<TasksCubit>().startTimer(
+                                      _remainingSeconds, state.task!);
+                                  getTask();
+                                  EasyLoading.dismiss();
+                                },
+                              );
+                            }),
+                      );
+                    } else if (state is TaskResumed) {
+                      return SizedBox(
+                        child: ListView.builder(
+                            shrinkWrap:
+                                true, // Prevents ListView from taking infinite height
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.task?.length,
+                            itemBuilder: (context, index) {
+                              return TaskWidget(
+                                size: size,
+                                taskModel: state.task![index],
+                                ontap: () async {
+                                  if (state.task!
+                                      .any((e) => e.startedAt != null)) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text(
+                                        "There is one onoging task!",
+                                      ),
+                                    ));
+                                    return;
+                                  }
+                                  EasyLoading.show();
+                                  await task.updateTask(state.task![index].id);
+                                  int min = state.task![index].completionTime;
+                                  _remainingSeconds = min * 60;
+                                  context.read<TasksCubit>().startTimer(
+                                      _remainingSeconds, state.task!);
+                                  getTask();
+                                  EasyLoading.dismiss();
+                                },
+                              );
+                            }),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             ),
-            const SizedBox(
-              height: 30,
-            ),
-            Text(
-              "TASKS",
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            Expanded(
-              child: BlocBuilder<TasksCubit, TasksState>(
-                builder: (context, state) {
-                  if (state is TasksInitial) {
-                    return Container();
-                  } else if (state is TasksLoaded) {
-                    return ListView.builder(
-                        itemCount: state.task?.length,
-                        itemBuilder: (context, index) {
-                          return TaskWidget(
-                            size: size,
-                            taskModel: state.task![index],
-                            ontap: () async {
-                              if (state.task!.any((e) => e.startedAt != null)) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            "There is one onoging task!")));
-                                return;
-                              }
-                              await task.updateTask(state.task![index].id);
-                              int hours = int.parse(state
-                                  .task![index].completionTime
-                                  .substring(0, 1));
-                              _remainingSeconds = hours * 3600;
-                              // context
-                              //     .read<TasksCubit>()
-                              //     .startTimer(_remainingSeconds, state.task!);
-                            },
-                          );
-                        });
-                  } else if (state is TaskResumed) {
-                    return ListView.builder(
-                        itemCount: state.task?.length,
-                        itemBuilder: (context, index) {
-                          return TaskWidget(
-                            size: size,
-                            taskModel: state.task![index],
-                            ontap: () async {
-                              if (state.task!.any((e) => e.startedAt != null)) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            "There is one onoging task!")));
-                                return;
-                              }
-                              await task.updateTask(state.task![index].id);
-                              int hours = int.parse(state
-                                  .task![index].completionTime
-                                  .substring(0, 1));
-                              _remainingSeconds = hours * 3600;
-                              // context
-                              //     .read<TasksCubit>()
-                              //     .startTimer(_remainingSeconds, state.task!);
-                            },
-                          );
-                        });
-                  } else {
-                    return Container();
-                  }
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

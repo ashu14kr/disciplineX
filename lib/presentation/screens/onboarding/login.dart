@@ -5,6 +5,8 @@ import 'package:anti_procastination/presentation/screens/home/home.dart';
 import 'package:anti_procastination/storage/storage.dart';
 import 'package:flutter/material.dart';
 
+import 'onboarding.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -28,7 +30,9 @@ class _LoginScreenState extends State<LoginScreen> {
         // Check if user info exists and add if necessary
         final doc = await task.getUserInfo(user.uid);
         if (doc?.balance == 0.0) {
-          await task.addUserInfo(user.displayName ?? "Unknown", user.uid, 0.0);
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const Onboarding()));
+          // await task.addUserInfo(user.displayName ?? "Unknown", user.uid, 0.0);
         }
 
         // Ensure the widget is still mounted before navigating

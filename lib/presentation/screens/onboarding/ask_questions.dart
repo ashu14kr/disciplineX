@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'helper_widget.dart';
+
 class AskQuestions extends StatefulWidget {
   const AskQuestions({super.key});
 
@@ -155,24 +157,58 @@ class _AskQuestionsState extends State<AskQuestions> {
                 child: GestureDetector(
                   onTap: () {
                     if ((index - 1) < questions.length - 1) {
-                      if (index == 1 && goal.text.isNotEmpty) {
-                        setState(() {
-                          index++;
-                        });
-                      } else if (index == 2 && detailedgoal.text.isNotEmpty) {
-                        setState(() {
-                          index++;
-                        });
-                      } else if (index == 3 && outcome.text.isNotEmpty) {
-                        setState(() {
-                          index++;
-                        });
+                      if (index == 1) {
+                        if (goal.text.isNotEmpty) {
+                          setState(() {
+                            index++;
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Please add a goal"),
+                            ),
+                          );
+                        }
+                      } else if (index == 2) {
+                        if (detailedgoal.text.isNotEmpty) {
+                          setState(() {
+                            index++;
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Please discribe your goal"),
+                            ),
+                          );
+                        }
+                      } else if (index == 3) {
+                        if (outcome.text.isNotEmpty) {
+                          setState(() {
+                            index++;
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Please add expected outcome"),
+                            ),
+                          );
+                        }
                       }
-                    } else {
-                      Navigator.push(
+                    } else if (index == 4) {
+                      if (selectedDate != null) {
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Groups()));
+                            builder: (context) => const Groups(),
+                          ),
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please add a deadline"),
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Container(
@@ -216,45 +252,4 @@ class _AskQuestionsState extends State<AskQuestions> {
       ),
     );
   }
-}
-
-Widget customTextEdit(
-    {required String hint,
-    required String label,
-    required TextEditingController controller,
-    required String error}) {
-  return Card(
-    color: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-    elevation: 3,
-    child: Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: TextFormField(
-        controller: controller,
-        maxLength: 80,
-        style: const TextStyle(fontSize: 16),
-        decoration: InputDecoration(
-          hintText: hint,
-          labelText: label,
-          labelStyle: const TextStyle(color: Colors.black),
-          border: InputBorder.none,
-        ),
-        validator: (value) {
-          if (value == null || value.trim().isEmpty) {
-            return error;
-          }
-          return null;
-        },
-      ),
-    ),
-  );
-}
-
-class QuestionModel {
-  String question;
-  Widget widget;
-
-  QuestionModel({required this.question, required this.widget});
 }

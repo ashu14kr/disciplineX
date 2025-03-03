@@ -7,7 +7,7 @@ String taskModelToJson(TaskModel data) => json.encode(data.toJson());
 class TaskModel {
   String id;
   int bet;
-  String completionTime;
+  int completionTime;
   DateTime createdAt;
   String name;
   String priority;
