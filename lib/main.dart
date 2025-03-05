@@ -1,4 +1,5 @@
 import 'package:anti_procastination/UiTesting/test_card.dart';
+import 'package:anti_procastination/controllers/cubit/milestone_cubit.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/firebase_options.dart';
 import 'package:anti_procastination/presentation/screens/onboarding/splash.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => TasksCubit()),
+        BlocProvider(create: (_) => MilestoneCubit())
       ],
       child: MaterialApp(
         title: 'DiscplineX',

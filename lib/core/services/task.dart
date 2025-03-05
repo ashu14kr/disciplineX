@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:anti_procastination/models/milestone_model.dart';
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:anti_procastination/models/user_model.dart';
-import 'package:anti_procastination/presentation/screens/home/add_milestone.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Task {
@@ -38,6 +38,8 @@ class Task {
 
     final milestone = {
       "_id": docRef.id,
+      "active": [],
+      "status": "NotCompleted",
       "name": name,
       "activities": activities,
       "createdAt": DateTime.now().toIso8601String(),
@@ -49,6 +51,18 @@ class Task {
     };
 
     await docRef.set(milestone);
+  }
+
+  updateMileStone(String docId, DateTime expireAt) async {
+    final docRef =
+        FirebaseFirestore.instance.collection('Milestones').doc(docId);
+    final docSnapshot = await docRef.get();
+    if (docSnapshot.exists) {
+      await docRef
+          .update({"active": 7 - expireAt.difference(DateTime.now()).inDays});
+    } else {
+      print("Document not found");
+    }
   }
 
   updateTask(String docId) async {
@@ -84,6 +98,25 @@ class Task {
       }).toList();
 
       return tasks;
+    } catch (e) {
+      print("Error fetching tasks: $e");
+      return null;
+    }
+  }
+
+  Future<List<ModelMilestone>?> getMilestones(String uid) async {
+    try {
+      final querySnapshot = await db
+          .collection("Milestones")
+          .where("uid", isEqualTo: uid)
+          .where("status", isEqualTo: "NotCompleted")
+          .get();
+
+      final milestones = querySnapshot.docs.map((doc) {
+        return ModelMilestone.fromJson(doc.data());
+      }).toList();
+
+      return milestones;
     } catch (e) {
       print("Error fetching tasks: $e");
       return null;

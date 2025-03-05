@@ -1,10 +1,13 @@
-import 'package:anti_procastination/UiTesting/test_milestone.dart';
 import 'package:anti_procastination/constants.dart';
+import 'package:anti_procastination/controllers/cubit/milestone_cubit.dart';
 import 'package:anti_procastination/presentation/screens/home/add_milestone.dart';
 import 'package:anti_procastination/presentation/screens/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../storage/model/local_user_model.dart';
+import '../../../storage/storage.dart';
 import '../setting/profile.dart';
 import '../wallet/wallet.dart';
 import 'home_helper.dart';
@@ -17,6 +20,23 @@ class MainHome extends StatefulWidget {
 }
 
 class _MainHomeState extends State<MainHome> {
+  Storage storage = Storage();
+
+  get() async {
+    LocalUserModel? response = await storage.getSignInInfo();
+    if (response?.uuid != null) {
+      context.read<MilestoneCubit>().getMilestones(response!.uuid);
+    }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      get();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -104,27 +124,53 @@ class _MainHomeState extends State<MainHome> {
                         fontWeight: FontWeight.w600,
                       ),
                 ),
-                SizedBox(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 3,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: MileStoneCard(
-                          ontap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const Home(),
+                BlocBuilder<MilestoneCubit, MilestoneState>(
+                  builder: (context, state) {
+                    if (state is MilestoneInitial) {
+                      return Container(
+                        child: const Center(
+                          child: Text(
+                            "Testing",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    }
+                    if (state is MilestoneLoaded) {
+                      return SizedBox(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.milestone?.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: MileStoneCard(
+                                ontap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Home(),
+                                    ),
+                                  );
+                                },
+                                model: state.milestone![index],
                               ),
                             );
                           },
                         ),
                       );
-                    },
-                  ),
+                    } else {
+                      return Container(
+                        child: const Center(
+                          child: Text(
+                            "Second Text",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 )
               ],
             ),

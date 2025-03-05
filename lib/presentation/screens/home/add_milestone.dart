@@ -4,6 +4,9 @@ import 'package:anti_procastination/storage/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:provider/provider.dart';
+
+import '../../../controllers/cubit/milestone_cubit.dart';
 
 class AddMilestone extends StatefulWidget {
   const AddMilestone({super.key});
@@ -80,6 +83,7 @@ class _AddMilestoneState extends State<AddMilestone> {
       if (response != null) {
         task.addMilestone(name.text, 0, isStakes ? stakeAmount : null, iconData,
             gradientData, response.uuid);
+        context.read<MilestoneCubit>().getMilestones(response.uuid);
         EasyLoading.dismiss();
         Navigator.pop(context);
       }

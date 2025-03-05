@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:anti_procastination/models/milestone_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -510,6 +511,183 @@ class TaskCard extends StatelessWidget {
   }
 }
 
+class MileStoneCard extends StatelessWidget {
+  const MileStoneCard({
+    super.key,
+    required this.ontap,
+    required this.model,
+  });
+
+  final VoidCallback ontap;
+  final ModelMilestone model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 170,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: const Color.fromARGB(255, 14, 14, 14),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.grey,
+            blurRadius: 0.3,
+            offset: Offset(0.3, 0.3),
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 25,
+        ),
+        child: Column(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    gradient: gradients[model.gradient],
+                    borderRadius: BorderRadius.circular(35),
+                  ),
+                  child: Icon(
+                    icons[model.icon],
+                    size: 50,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  width: 20,
+                ),
+                SizedBox(
+                  width: 200,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        model.name,
+                        overflow: TextOverflow.ellipsis,
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        model.activities == 0
+                            ? "No Activities"
+                            : "${model.activities} Activities",
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            model.stakes == null
+                                ? "Free"
+                                : "💰\$${model.stakes}",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
+                          Text(
+                            "${model.expiryAt.difference(DateTime.now()).inDays} Days Left",
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+                IconButton(
+                  onPressed: ontap,
+                  icon: const Icon(
+                    CupertinoIcons.forward,
+                    size: 25,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: 15,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 2, 2, 2),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Center(
+                child: ListView.builder(
+                  itemCount: 7,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    List lis = model.active;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 2,
+                        horizontal: 3,
+                      ),
+                      child: Container(
+                        height: 12,
+                        width: 44,
+                        decoration: BoxDecoration(
+                          color: lis.contains(index)
+                              ? Colors.green
+                              : const Color.fromARGB(255, 67, 89, 69),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            // LinearProgressIndicator(
+            //   color: mainColor,
+            //   backgroundColor: Colors.white,
+            //   minHeight: 10,
+            //   borderRadius: BorderRadius.circular(16),
+            //   value: 0.7,
+            // )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class CustomFloatingBtn extends StatelessWidget {
   const CustomFloatingBtn({
     super.key,
@@ -590,6 +768,7 @@ class CustomFloatingBtn extends StatelessWidget {
     );
   }
 }
+
 
 
 
