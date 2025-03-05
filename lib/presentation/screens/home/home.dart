@@ -1,3 +1,4 @@
+import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:anti_procastination/presentation/screens/home/addtask.dart';
@@ -52,7 +53,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+      backgroundColor: bgColor,
       floatingActionButton: CustomFloatingBtn(
         size: size,
         onTap: () {
@@ -64,49 +65,6 @@ class _HomeState extends State<Home> {
           );
         },
       ),
-      // appBar: AppBar(
-      //   title: Text(
-      //     "DisciplineX",
-      //     style: Theme.of(context)
-      //         .textTheme
-      //         .headlineSmall!
-      //         .copyWith(color: Colors.white),
-      //   ),
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       Navigator.push(
-      //         context,
-      //         MaterialPageRoute(
-      //           builder: (context) => const Profile(),
-      //         ),
-      //       );
-      //     },
-      //     icon: const Icon(
-      //       Icons.settings_outlined,
-      //       size: 30,
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      //   actions: [
-      //     IconButton(
-      //       onPressed: () {
-      //         Navigator.push(
-      //           context,
-      //           MaterialPageRoute(
-      //             builder: (context) => const Wallet(),
-      //           ),
-      //         );
-      //       },
-      //       icon: const Icon(
-      //         Icons.wallet,
-      //         size: 30,
-      //         color: Colors.white,
-      //       ),
-      //     ),
-      //   ],
-      //   backgroundColor: const Color.fromARGB(255, 15, 15, 15),
-      //   elevation: 0,
-      // ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -119,39 +77,31 @@ class _HomeState extends State<Home> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Profile(),
-                          ),
-                        );
+                        Navigator.pop(context);
                       },
                       icon: const Icon(
-                        Icons.settings_outlined,
+                        Icons.close,
                         size: 30,
                         color: Colors.white,
                       ),
                     ),
-                    Text(
-                      "DisciplineX",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(color: Colors.white),
+                    SizedBox(
+                      width: 250,
+                      child: Text(
+                        "Get back linkedin account engagement",
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineSmall!
+                            .copyWith(color: Colors.white),
+                      ),
                     ),
                     IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Wallet(),
-                          ),
-                        );
-                      },
+                      onPressed: () {},
                       icon: const Icon(
                         Icons.wallet,
                         size: 30,
-                        color: Colors.white,
+                        color: Colors.transparent,
                       ),
                     ),
                   ],

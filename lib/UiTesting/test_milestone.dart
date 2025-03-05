@@ -93,12 +93,12 @@ class MileStoneCard extends StatelessWidget {
       height: 170,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: const Color.fromARGB(255, 22, 22, 22),
+        color: const Color.fromARGB(255, 14, 14, 14),
         boxShadow: const [
           BoxShadow(
             color: Colors.grey,
-            blurRadius: 1,
-            offset: Offset(1, 2),
+            blurRadius: 0.3,
+            offset: Offset(0.3, 0.3),
           )
         ],
       ),
@@ -204,15 +204,47 @@ class MileStoneCard extends StatelessWidget {
               ],
             ),
             const SizedBox(
-              height: 15,
+              height: 10,
             ),
-            LinearProgressIndicator(
-              color: mainColor,
-              backgroundColor: Colors.white,
-              minHeight: 10,
-              borderRadius: BorderRadius.circular(16),
-              value: 0.7,
-            )
+            Container(
+              height: 15,
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 2, 2, 2),
+                borderRadius: BorderRadius.circular(5),
+              ),
+              child: Center(
+                child: ListView.builder(
+                  itemCount: 7,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    List lis = [1, 3];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 2,
+                        horizontal: 3,
+                      ),
+                      child: Container(
+                        height: 12,
+                        width: 44,
+                        decoration: BoxDecoration(
+                          color: lis.contains(index)
+                              ? Colors.green
+                              : const Color.fromARGB(255, 67, 89, 69),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            // LinearProgressIndicator(
+            //   color: mainColor,
+            //   backgroundColor: Colors.white,
+            //   minHeight: 10,
+            //   borderRadius: BorderRadius.circular(16),
+            //   value: 0.7,
+            // )
           ],
         ),
       ),

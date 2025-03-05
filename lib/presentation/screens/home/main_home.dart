@@ -1,4 +1,6 @@
 import 'package:anti_procastination/UiTesting/test_milestone.dart';
+import 'package:anti_procastination/constants.dart';
+import 'package:anti_procastination/presentation/screens/home/add_milestone.dart';
 import 'package:anti_procastination/presentation/screens/home/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +21,17 @@ class _MainHomeState extends State<MainHome> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+      backgroundColor: bgColor,
       floatingActionButton: CustomFloatingBtn(
         size: size,
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddMilestone(),
+            ),
+          );
+        },
       ),
       body: SafeArea(
         child: Padding(

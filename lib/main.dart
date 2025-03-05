@@ -1,4 +1,4 @@
-import 'package:anti_procastination/UiTesting/test_milestone.dart';
+import 'package:anti_procastination/UiTesting/test_card.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/firebase_options.dart';
 import 'package:anti_procastination/presentation/screens/onboarding/splash.dart';
@@ -27,16 +27,16 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => TasksCubit()),
       ],
       child: MaterialApp(
-        title: 'DiscplineX',
-        debugShowCheckedModeBanner: false,
-        builder: EasyLoading.init(),
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        // home: MilestonesScreen()
-        home: const SplashScreen(),
-      ),
+          title: 'DiscplineX',
+          debugShowCheckedModeBanner: false,
+          builder: EasyLoading.init(),
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: TestCards()
+          // home: const SplashScreen(),
+          ),
     );
   }
 }
