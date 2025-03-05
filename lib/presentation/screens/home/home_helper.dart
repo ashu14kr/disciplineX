@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants.dart';
@@ -320,6 +321,186 @@ class TaskWidget extends StatelessWidget {
                         ),
                   ),
                 ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class TaskCard extends StatelessWidget {
+  const TaskCard({
+    super.key,
+    required this.ontap,
+    required this.model,
+  });
+
+  final VoidCallback ontap;
+  final TaskModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    String monthName(int month) {
+      switch (month) {
+        case 1:
+          return "January";
+        case 2:
+          return "February";
+        case 3:
+          return "March";
+        case 4:
+          return "April";
+        case 5:
+          return "May";
+        case 6:
+          return "June";
+        case 7:
+          return "July";
+        case 8:
+          return "August";
+        case 9:
+          return "September";
+        case 10:
+          return "October";
+        case 11:
+          return "November";
+        case 12:
+          return "December";
+        default:
+          return "Unknown";
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Container(
+        height: 164,
+        width: Size.infinite.width,
+        decoration: BoxDecoration(
+            color: boxbgColor,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 0.3,
+                offset: Offset(0.3, 0.3),
+              )
+            ]),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 20,
+            horizontal: 20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: model.priority == "Medium"
+                          ? const Color.fromARGB(255, 213, 160, 0)
+                          : model.priority == "Low"
+                              ? Colors.green
+                              : Colors.red,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 3,
+                      ),
+                      child: Text(
+                        model.priority,
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                              color: Colors.white,
+                            ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 9),
+                  SizedBox(
+                    width: 260,
+                    child: Text(
+                      model.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                    ),
+                  ),
+                  const SizedBox(height: 9),
+                  Row(
+                    children: [
+                      const Icon(
+                        CupertinoIcons.clock,
+                        color: Colors.grey,
+                        size: 23,
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      Text(
+                        "${model.completionTime} Mins",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 9),
+                  Row(
+                    children: [
+                      Text(
+                        "Date:",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        width: 6,
+                      ),
+                      Text(
+                        "${model.createdAt.day.toString()} ${monthName(model.createdAt.month)}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleSmall!
+                            .copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              GestureDetector(
+                onTap: ontap,
+                child: Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    color: mainColor,
+                    borderRadius: BorderRadius.circular(35),
+                  ),
+                  child: Icon(
+                    model.startedAt == null
+                        ? CupertinoIcons.play_arrow_solid
+                        : CupertinoIcons.pause_solid,
+                    shadows: const [
+                      Shadow(
+                        color: Color.fromARGB(255, 20, 20, 20),
+                        blurRadius: 3,
+                        offset: Offset(3, 5),
+                      ),
+                    ],
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ],
           ),

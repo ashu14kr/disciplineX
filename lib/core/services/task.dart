@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:anti_procastination/models/user_model.dart';
+import 'package:anti_procastination/presentation/screens/home/add_milestone.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Task {
@@ -29,6 +30,25 @@ class Task {
     };
 
     await docRef.set(task);
+  }
+
+  addMilestone(String name, int activities, dynamic stakes, String icon,
+      String gradient, String uid) async {
+    final docRef = db.collection("Milestones").doc();
+
+    final milestone = {
+      "_id": docRef.id,
+      "name": name,
+      "activities": activities,
+      "createdAt": DateTime.now().toIso8601String(),
+      "expiryAt": DateTime.now().add(const Duration(days: 7)).toIso8601String(),
+      "stakes": stakes,
+      "uid": uid,
+      "icon": icon,
+      "gradient": gradient
+    };
+
+    await docRef.set(milestone);
   }
 
   updateTask(String docId) async {

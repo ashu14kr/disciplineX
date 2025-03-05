@@ -47,7 +47,36 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+      backgroundColor: bgColor,
+      bottomNavigationBar: InkWell(
+        onTap: () {
+          addTask();
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
+          child: Container(
+            width: 250,
+            height: 60,
+            decoration: BoxDecoration(
+              color: mainColor,
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(
+                color: Colors.black,
+                width: 2,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                "Create Task",
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: SingleChildScrollView(
@@ -63,9 +92,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         Navigator.pop(context);
                       },
                       icon: const Icon(
-                        CupertinoIcons.back,
+                        CupertinoIcons.clear,
                         color: Colors.white,
-                        size: 30,
+                        size: 25,
                       ),
                     ),
                     Text(
@@ -98,6 +127,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   style: const TextStyle(color: Colors.white),
                   controller: taskController,
                   decoration: InputDecoration(
+                    fillColor: boxbgColor,
+                    filled: true,
                     hintText: "Enter task...",
                     hintStyle: const TextStyle(
                         color: Color.fromARGB(255, 111, 111, 111)),
@@ -136,7 +167,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       child: Card(
                         color: selectedPriority == priority
                             ? priorityColor
-                            : const Color.fromARGB(255, 255, 255, 255),
+                            : boxbgColor,
                         elevation: 2,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -152,11 +183,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                     : mainColor,
                               ),
                               const SizedBox(width: 5),
-                              Text(priority,
-                                  style: TextStyle(
-                                      color: selectedPriority == priority
-                                          ? Colors.white
-                                          : Colors.black)),
+                              Text(
+                                priority,
+                                style: TextStyle(
+                                  color: selectedPriority == priority
+                                      ? Colors.white
+                                      : Colors.white,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -184,58 +218,58 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   activeColor: mainColor,
                   inactiveColor: Colors.deepPurple[100],
                 ),
-                const SizedBox(height: 20),
-                // Bet Amount Slider
-                Text(
-                  "Bet Amount (\$${betAmount.toStringAsFixed(0)})",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-                Slider(
-                  value: betAmount,
-                  min: 1,
-                  max: 50,
-                  divisions: 49,
-                  label: "\$${betAmount.toStringAsFixed(0)}",
-                  onChanged: (value) => setState(() => betAmount = value),
-                  activeColor: mainColor,
-                  inactiveColor: Colors.deepPurple[100],
-                ),
-                const SizedBox(height: 30),
+                // const SizedBox(height: 20),
+                // // Bet Amount Slider
+                // Text(
+                //   "Bet Amount (\$${betAmount.toStringAsFixed(0)})",
+                //   style: const TextStyle(
+                //     fontWeight: FontWeight.w500,
+                //     fontSize: 18,
+                //     color: Colors.white,
+                //   ),
+                // ),
+                // Slider(
+                //   value: betAmount,
+                //   min: 1,
+                //   max: 50,
+                //   divisions: 49,
+                //   label: "\$${betAmount.toStringAsFixed(0)}",
+                //   onChanged: (value) => setState(() => betAmount = value),
+                //   activeColor: mainColor,
+                //   inactiveColor: Colors.deepPurple[100],
+                // ),
+                // const SizedBox(height: 30),
 
-                // Create Task Button
-                Center(
-                  child: InkWell(
-                    onTap: () {
-                      addTask();
-                    },
-                    child: Container(
-                      width: 250,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: mainColor,
-                        borderRadius: BorderRadius.circular(18),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "Create Task",
-                          style:
-                              Theme.of(context).textTheme.bodyLarge!.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // // Create Task Button
+                // Center(
+                //   child: InkWell(
+                //     onTap: () {
+                //       addTask();
+                //     },
+                //     child: Container(
+                //       width: 250,
+                //       height: 50,
+                //       decoration: BoxDecoration(
+                //         color: mainColor,
+                //         borderRadius: BorderRadius.circular(18),
+                //         border: Border.all(
+                //           color: Colors.black,
+                //           width: 2,
+                //         ),
+                //       ),
+                //       child: Center(
+                //         child: Text(
+                //           "Create Task",
+                //           style:
+                //               Theme.of(context).textTheme.bodyLarge!.copyWith(
+                //                     color: Colors.white,
+                //                     fontWeight: FontWeight.w600,
+                //                   ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

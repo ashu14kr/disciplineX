@@ -1,6 +1,9 @@
 import 'package:anti_procastination/constants.dart';
+import 'package:anti_procastination/core/services/task.dart';
+import 'package:anti_procastination/storage/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class AddMilestone extends StatefulWidget {
   const AddMilestone({super.key});
@@ -13,49 +16,84 @@ class _AddMilestoneState extends State<AddMilestone> {
   bool isStakes = false; // Toggle for Free or Stakes
   double stakeAmount = 10.0; // Default stake amount
 
+  final TextEditingController name = TextEditingController();
+  Task task = Task();
+  Storage storage = Storage();
+
   // List of icons for selection
-  final List<IconData> icons = [
-    CupertinoIcons.chevron_left_slash_chevron_right,
-    CupertinoIcons.sportscourt,
-    CupertinoIcons.person,
-    CupertinoIcons.tree,
-    CupertinoIcons.book,
-    CupertinoIcons.textformat,
-    CupertinoIcons.pencil,
-    CupertinoIcons.person_solid,
-    CupertinoIcons.moon_stars,
-    CupertinoIcons.drop,
-    CupertinoIcons.bag,
-    CupertinoIcons.chart_bar_alt_fill,
-    CupertinoIcons.airplane,
-    CupertinoIcons.money_dollar,
-    CupertinoIcons.chart_bar,
-    CupertinoIcons.music_mic,
-    CupertinoIcons.photo_camera,
-    CupertinoIcons.person_2,
-    CupertinoIcons.heart,
-    CupertinoIcons.briefcase,
-    CupertinoIcons.paintbrush,
+  final List<Map<String, IconData>> iconsList = [
+    {'code': CupertinoIcons.chevron_left_slash_chevron_right},
+    {'sports': CupertinoIcons.sportscourt},
+    {'person': CupertinoIcons.person},
+    {'nature': CupertinoIcons.tree},
+    {'education': CupertinoIcons.book},
+    {'text': CupertinoIcons.textformat},
+    {'writing': CupertinoIcons.pencil},
+    {'user': CupertinoIcons.person_solid},
+    {'night': CupertinoIcons.moon_stars},
+    {'water': CupertinoIcons.drop},
+    {'shopping': CupertinoIcons.bag},
+    {'analytics': CupertinoIcons.chart_bar_alt_fill},
+    {'travel': CupertinoIcons.airplane},
+    {'finance': CupertinoIcons.money_dollar},
+    {'stats': CupertinoIcons.chart_bar},
+    {'music': CupertinoIcons.music_mic},
+    {'photography': CupertinoIcons.photo_camera},
+    {'community': CupertinoIcons.person_2},
+    {'health': CupertinoIcons.heart},
+    {'business': CupertinoIcons.briefcase},
+    {'art': CupertinoIcons.paintbrush},
   ];
 
   IconData? selectedIcon; // Selected icon
+  String iconData = "code";
+  String gradientData = "Red-Orange";
 
-  final List<LinearGradient> gradients = [
-    const LinearGradient(colors: [Colors.blue, Colors.purple]),
-    const LinearGradient(colors: [Colors.red, Colors.orange]),
-    const LinearGradient(colors: [Colors.green, Colors.teal]),
-    const LinearGradient(colors: [Colors.indigo, Colors.blueAccent]),
-    const LinearGradient(colors: [Colors.pink, Colors.deepPurple]),
+  final List<Map<String, LinearGradient>> gradientsList = [
+    {
+      "Blue-Purple": const LinearGradient(colors: [Colors.blue, Colors.purple])
+    },
+    {
+      "Red-Orange": const LinearGradient(colors: [Colors.red, Colors.orange])
+    },
+    {
+      "Green-Teal": const LinearGradient(colors: [Colors.green, Colors.teal])
+    },
+    {
+      "Indigo-Blue":
+          const LinearGradient(colors: [Colors.indigo, Colors.blueAccent])
+    },
+    {
+      "Pink-Purple":
+          const LinearGradient(colors: [Colors.pink, Colors.deepPurple])
+    },
   ];
 
   LinearGradient? selectedGradient;
+
+  void createMilestone() async {
+    if (name.text.isEmpty) {
+      EasyLoading.showToast("Pls enter name");
+    } else {
+      EasyLoading.show();
+      final response = await storage.getSignInInfo();
+      if (response != null) {
+        task.addMilestone(name.text, 0, isStakes ? stakeAmount : null, iconData,
+            gradientData, response.uuid);
+        EasyLoading.dismiss();
+        Navigator.pop(context);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      bottomNavigationBar: InkWell(
-        onTap: () {},
+      bottomNavigationBar: GestureDetector(
+        onTap: () {
+          createMilestone();
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 35, horizontal: 25),
           child: Container(
@@ -121,7 +159,7 @@ class _AddMilestoneState extends State<AddMilestone> {
             const SizedBox(height: 5),
             TextField(
               style: const TextStyle(color: Colors.white),
-              // controller: taskController,
+              controller: name,
               decoration: InputDecoration(
                 hintText: "Enter Title...",
                 fillColor: boxbgColor,
@@ -207,7 +245,7 @@ class _AddMilestoneState extends State<AddMilestone> {
             const SizedBox(height: 10),
             Wrap(
               spacing: 15,
-              children: icons.map((icon) {
+              children: iconsList.map((icon) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 5,
@@ -215,7 +253,8 @@ class _AddMilestoneState extends State<AddMilestone> {
                   child: GestureDetector(
                     onTap: () {
                       setState(() {
-                        selectedIcon = icon;
+                        selectedIcon = icon.values.first;
+                        iconData = icon.keys.first;
                       });
                     },
                     child: Container(
@@ -223,7 +262,7 @@ class _AddMilestoneState extends State<AddMilestone> {
                       decoration: BoxDecoration(
                         color: boxbgColor,
                         border: Border.all(
-                          color: selectedIcon == icon
+                          color: selectedIcon == icon.values.first
                               ? Colors.white
                               : Colors.transparent,
                           width: 1,
@@ -237,7 +276,8 @@ class _AddMilestoneState extends State<AddMilestone> {
                         ],
                         borderRadius: BorderRadius.circular(7),
                       ),
-                      child: Icon(icon, size: 28, color: Colors.white),
+                      child: Icon(icon.values.first,
+                          size: 28, color: Colors.white),
                     ),
                   ),
                 );
@@ -255,20 +295,21 @@ class _AddMilestoneState extends State<AddMilestone> {
             const SizedBox(height: 10),
             Wrap(
               spacing: 10,
-              children: gradients.map((gradient) {
+              children: gradientsList.map((gradient) {
                 return GestureDetector(
                   onTap: () {
                     setState(() {
-                      selectedGradient = gradient;
+                      selectedGradient = gradient.values.first;
+                      gradientData = gradient.keys.first;
                     });
                   },
                   child: Container(
                     width: 50,
                     height: 50,
                     decoration: BoxDecoration(
-                      gradient: gradient,
+                      gradient: gradient.values.first,
                       shape: BoxShape.circle,
-                      border: selectedGradient == gradient
+                      border: selectedGradient == gradient.values.first
                           ? Border.all(color: Colors.white, width: 5)
                           : null,
                     ),

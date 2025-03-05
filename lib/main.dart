@@ -27,16 +27,16 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => TasksCubit()),
       ],
       child: MaterialApp(
-          title: 'DiscplineX',
-          debugShowCheckedModeBanner: false,
-          builder: EasyLoading.init(),
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
-          ),
-          home: TestCards()
-          // home: const SplashScreen(),
-          ),
+        title: 'DiscplineX',
+        debugShowCheckedModeBanner: false,
+        builder: EasyLoading.init(),
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        // home: TestCards()
+        home: const SplashScreen(),
+      ),
     );
   }
 }

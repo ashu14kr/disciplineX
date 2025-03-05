@@ -2,8 +2,6 @@ import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:anti_procastination/presentation/screens/home/addtask.dart';
-import 'package:anti_procastination/presentation/screens/setting/profile.dart';
-import 'package:anti_procastination/presentation/screens/wallet/wallet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -277,9 +275,8 @@ class _HomeState extends State<Home> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: state.task?.length,
                             itemBuilder: (context, index) {
-                              return TaskWidget(
-                                size: size,
-                                taskModel: state.task![index],
+                              return TaskCard(
+                                model: state.task![index],
                                 ontap: () async {
                                   if (state.task!
                                       .any((e) => e.startedAt != null)) {
@@ -311,18 +308,17 @@ class _HomeState extends State<Home> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: state.task?.length,
                             itemBuilder: (context, index) {
-                              return TaskWidget(
-                                size: size,
-                                taskModel: state.task![index],
+                              return TaskCard(
+                                model: state.task![index],
                                 ontap: () async {
                                   if (state.task!
                                       .any((e) => e.startedAt != null)) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                      content: Text(
-                                        "There is one onoging task!",
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content:
+                                            Text("There is one onoging task!"),
                                       ),
-                                    ));
+                                    );
                                     return;
                                   }
                                   EasyLoading.show();
