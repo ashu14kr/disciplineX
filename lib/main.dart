@@ -1,3 +1,4 @@
+import 'package:anti_procastination/UiTesting/test_milestone.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/firebase_options.dart';
 import 'package:anti_procastination/presentation/screens/onboarding/splash.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
+        // home: MilestonesScreen()
         home: const SplashScreen(),
       ),
     );
