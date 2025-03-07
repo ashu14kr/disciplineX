@@ -1,18 +1,22 @@
 import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
+import 'package:anti_procastination/models/milestone_model.dart';
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:anti_procastination/presentation/screens/home/addtask.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
+import '../../../controllers/cubit/milestone_cubit.dart';
 import '../../../core/services/task.dart';
 import '../../../storage/model/local_user_model.dart';
 import '../../../storage/storage.dart';
 import 'home_helper.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  const Home({super.key, required this.model});
+
+  final ModelMilestone model;
 
   @override
   State<Home> createState() => _HomeState();
@@ -23,6 +27,7 @@ class _HomeState extends State<Home> {
   Task task = Task();
   List<TaskModel> taskModel = [];
   int _remainingSeconds = 0;
+  String uid = "";
 
   String formatTime(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
@@ -35,7 +40,12 @@ class _HomeState extends State<Home> {
   getTask() async {
     LocalUserModel? response = await storage.getSignInInfo();
     if (response?.uuid != null) {
-      context.read<TasksCubit>().getTasks(response!.uuid);
+      context
+          .read<TasksCubit>()
+          .getTasks(response!.uuid, widget.model, context);
+      setState(() {
+        uid = response.uuid;
+      });
     }
   }
 
@@ -58,7 +68,9 @@ class _HomeState extends State<Home> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const AddTaskScreen(),
+              builder: (context) => AddTaskScreen(
+                model: widget.model,
+              ),
             ),
           );
         },
@@ -75,6 +87,7 @@ class _HomeState extends State<Home> {
                   children: [
                     IconButton(
                       onPressed: () {
+                        context.read<MilestoneCubit>().getMilestones(uid);
                         Navigator.pop(context);
                       },
                       icon: const Icon(
@@ -85,13 +98,15 @@ class _HomeState extends State<Home> {
                     ),
                     SizedBox(
                       width: 250,
-                      child: Text(
-                        "Get back linkedin account engagement",
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(color: Colors.white),
+                      child: Center(
+                        child: Text(
+                          widget.model.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall!
+                              .copyWith(color: Colors.white),
+                        ),
                       ),
                     ),
                     IconButton(
@@ -190,68 +205,68 @@ class _HomeState extends State<Home> {
                     },
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Center(
-                  child: InkWell(
-                    onTap: () async {
-                      // if (taskModel.any((e) => e.startedAt != null)) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      //       content: Text("There is one onoging task!")));
-                      //   return;
-                      // }
-                      // await task.updateTask(taskModel[0].id);
-                      // int hours =
-                      //     int.parse(taskModel[0].completionTime.substring(0, 1));
-                      // _remainingSeconds = hours * 3600;
-                      // _startTimer();
-                    },
-                    child: Container(
-                      height: size.height * 0.05,
-                      width: size.width * 0.4,
-                      decoration: BoxDecoration(
-                        // color: const Color.fromARGB(255, 238, 255, 175),
-                        color: taskModel.any((e) => e.startedAt != null)
-                            ? const Color.fromARGB(255, 255, 255, 255)
-                            : Colors.lightGreen,
-                        borderRadius: BorderRadius.circular(
-                          12,
-                        ),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2,
-                        ),
+                // const SizedBox(
+                //   height: 30,
+                // ),
+                // Center(
+                //   child: InkWell(
+                //     onTap: () async {
+                //       // if (taskModel.any((e) => e.startedAt != null)) {
+                //       //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                //       //       content: Text("There is one onoging task!")));
+                //       //   return;
+                //       // }
+                //       // await task.updateTask(taskModel[0].id);
+                //       // int hours =
+                //       //     int.parse(taskModel[0].completionTime.substring(0, 1));
+                //       // _remainingSeconds = hours * 3600;
+                //       // _startTimer();
+                //     },
+                //     child: Container(
+                //       height: size.height * 0.05,
+                //       width: size.width * 0.4,
+                //       decoration: BoxDecoration(
+                //         // color: const Color.fromARGB(255, 238, 255, 175),
+                //         color: taskModel.any((e) => e.startedAt != null)
+                //             ? const Color.fromARGB(255, 255, 255, 255)
+                //             : Colors.lightGreen,
+                //         borderRadius: BorderRadius.circular(
+                //           12,
+                //         ),
+                //         border: Border.all(
+                //           color: Colors.black,
+                //           width: 2,
+                //         ),
 
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 3,
-                            offset: Offset(
-                              3,
-                              2,
-                            ),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          "DO IT NOW",
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall!
-                              .copyWith(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 19,
-                              ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                //         boxShadow: const [
+                //           BoxShadow(
+                //             color: Colors.black,
+                //             blurRadius: 3,
+                //             offset: Offset(
+                //               3,
+                //               2,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //       child: Center(
+                //         child: Text(
+                //           "DO IT NOW",
+                //           textAlign: TextAlign.center,
+                //           style: Theme.of(context)
+                //               .textTheme
+                //               .headlineSmall!
+                //               .copyWith(
+                //                 fontWeight: FontWeight.w400,
+                //                 fontSize: 19,
+                //               ),
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 const SizedBox(
-                  height: 30,
+                  height: 40,
                 ),
                 Text(
                   "TASKS",
@@ -293,7 +308,10 @@ class _HomeState extends State<Home> {
                                   int min = state.task![index].completionTime;
                                   _remainingSeconds = min * 60;
                                   context.read<TasksCubit>().startTimer(
-                                      _remainingSeconds, state.task!);
+                                      _remainingSeconds,
+                                      state.task!,
+                                      widget.model,
+                                      context);
                                   getTask();
                                   EasyLoading.dismiss();
                                 },
@@ -326,7 +344,10 @@ class _HomeState extends State<Home> {
                                   int min = state.task![index].completionTime;
                                   _remainingSeconds = min * 60;
                                   context.read<TasksCubit>().startTimer(
-                                      _remainingSeconds, state.task!);
+                                      _remainingSeconds,
+                                      state.task!,
+                                      widget.model,
+                                      context);
                                   getTask();
                                   EasyLoading.dismiss();
                                 },

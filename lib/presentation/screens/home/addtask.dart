@@ -1,4 +1,5 @@
 import 'package:anti_procastination/constants.dart';
+import 'package:anti_procastination/models/milestone_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,7 +10,9 @@ import '../../../core/services/task.dart';
 import '../../../storage/storage.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({super.key});
+  const AddTaskScreen({super.key, required this.model});
+
+  final ModelMilestone model;
 
   @override
   _AddTaskScreenState createState() => _AddTaskScreenState();
@@ -34,10 +37,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           selectedPriority,
           selectedTime.toInt(),
           "NotCompleted",
-          betAmount.toInt(),
+          widget.model.id,
           response.uuid,
         );
-        context.read<TasksCubit>().getTasks(response.uuid);
+        task.updateMilestoneActivity(
+            widget.model.id, widget.model.activities += 1);
+        context
+            .read<TasksCubit>()
+            .getTasks(response.uuid, widget.model, context);
         EasyLoading.dismiss();
         Navigator.pop(context);
       }
@@ -48,7 +55,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: bgColor,
-      bottomNavigationBar: InkWell(
+      bottomNavigationBar: GestureDetector(
         onTap: () {
           addTask();
         },

@@ -1,3 +1,4 @@
+import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/presentation/screens/setting/bounty.dart';
 import 'package:anti_procastination/presentation/screens/onboarding/login.dart';
 import 'package:anti_procastination/storage/storage.dart';
@@ -14,7 +15,7 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Storage storage = Storage();
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+      backgroundColor: bgColor,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -61,18 +62,18 @@ class Profile extends StatelessWidget {
                   height: 120,
                   width: Size.infinite.width,
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 26, 26, 26),
+                    color: boxbgColor,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
+                    // border: Border.all(
+                    //   color: Colors.white,
+                    // ),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 3,
+                        color: Colors.white,
+                        blurRadius: 0.3,
                         offset: Offset(
-                          2,
-                          2,
+                          0.3,
+                          0.3,
                         ),
                       ),
                     ],
@@ -100,9 +101,20 @@ class Profile extends StatelessWidget {
                 Container(
                   width: Size.infinite.width,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
+                    // border: Border.all(
+                    //   color: Colors.white,
+                    // ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        blurRadius: 0.3,
+                        offset: Offset(
+                          0.3,
+                          0.3,
+                        ),
+                      ),
+                    ],
+                    color: boxbgColor,
                     borderRadius: BorderRadius.circular(
                       16,
                     ),
@@ -144,9 +156,20 @@ class Profile extends StatelessWidget {
                   height: 325,
                   width: Size.infinite.width,
                   decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
+                    // border: Border.all(
+                    //   color: Colors.white,
+                    // ),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.white,
+                        blurRadius: 0.3,
+                        offset: Offset(
+                          0.3,
+                          0.3,
+                        ),
+                      ),
+                    ],
+                    color: boxbgColor,
                     borderRadius: BorderRadius.circular(
                       16,
                     ),

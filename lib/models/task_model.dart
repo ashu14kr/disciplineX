@@ -6,7 +6,7 @@ String taskModelToJson(TaskModel data) => json.encode(data.toJson());
 
 class TaskModel {
   String id;
-  int bet;
+  String mid;
   int completionTime;
   DateTime createdAt;
   String name;
@@ -17,7 +17,7 @@ class TaskModel {
 
   TaskModel({
     required this.id,
-    required this.bet,
+    required this.mid,
     required this.completionTime,
     required this.createdAt,
     required this.name,
@@ -29,7 +29,7 @@ class TaskModel {
 
   factory TaskModel.fromJson(Map<String, dynamic> json) => TaskModel(
         id: json["_id"],
-        bet: json["bet"],
+        mid: json["mid"],
         completionTime: json["completionTime"],
         createdAt: DateTime.parse(json["createdAt"]),
         name: json["name"],
@@ -41,7 +41,7 @@ class TaskModel {
 
   Map<String, dynamic> toJson() => {
         "_id": id,
-        "bet": bet,
+        "mid": mid,
         "completionTime": completionTime,
         "createdAt": createdAt.toIso8601String(),
         "name": name,

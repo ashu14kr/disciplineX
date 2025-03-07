@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:anti_procastination/models/milestone_model.dart';
+import 'package:anti_procastination/presentation/screens/home/milestone_verify.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -114,221 +115,6 @@ class SquareProgressPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-class TaskWidget extends StatelessWidget {
-  const TaskWidget({
-    super.key,
-    required this.size,
-    required this.taskModel,
-    required this.ontap,
-  });
-
-  final Size size;
-  final TaskModel taskModel;
-  final VoidCallback ontap;
-
-  @override
-  Widget build(BuildContext context) {
-    String monthName(int month) {
-      switch (month) {
-        case 1:
-          return "Jan";
-        case 2:
-          return "Feb";
-        case 3:
-          return "Mar";
-        case 4:
-          return "Apr";
-        case 5:
-          return "May";
-        case 6:
-          return "Jun";
-        case 7:
-          return "Jul";
-        case 8:
-          return "Aug";
-        case 9:
-          return "Sep";
-        case 10:
-          return "Oct";
-        case 11:
-          return "Nov";
-        case 12:
-          return "Dec";
-        default:
-          return "Unknown";
-      }
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
-      child: Container(
-        height: 160,
-        width: size.width * 0.9,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 35, 35, 35),
-          border: Border.all(
-            color: Colors.white,
-            width: 2,
-          ),
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(16),
-            bottomRight: Radius.circular(16),
-            bottomLeft: Radius.circular(16),
-          ),
-          // boxShadow: const [
-          //   BoxShadow(
-          //     color: mainColor,
-          //     blurRadius: 3,
-          //     offset: Offset(
-          //       4,
-          //       4,
-          //     ),
-          //   ),
-          // ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 25,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    4,
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Text(
-                    taskModel.priority,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(fontSize: 14),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: size.width * 0.9,
-                height: 24,
-                child: Text(
-                  taskModel.name,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                ),
-              ),
-              const SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    size: 16,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    " ${taskModel.createdAt.day.toString()} ${monthName(taskModel.createdAt.month)}",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: ontap,
-                    child: Container(
-                      height: 35,
-                      width: size.width * 0.3,
-                      decoration: BoxDecoration(
-                        color: taskModel.startedAt != null
-                            ? Colors.lightGreen
-                            : mainColor,
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(8),
-                          bottomRight: Radius.circular(8),
-                          bottomLeft: Radius.circular(8),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          taskModel.startedAt != null ? "Running" : "START NOW",
-                          textAlign: TextAlign.center,
-                          style:
-                              Theme.of(context).textTheme.labelLarge!.copyWith(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 22,
-                  ),
-                  const Icon(
-                    Icons.price_change,
-                    color: Color.fromARGB(255, 122, 171, 102),
-                    size: 24,
-                  ),
-                  Text(
-                    "\$${taskModel.bet}",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                  ),
-                  const SizedBox(
-                    width: 14,
-                  ),
-                  const Icon(
-                    Icons.lock_clock,
-                    color: Colors.red,
-                    size: 24,
-                  ),
-                  Text(
-                    "${taskModel.completionTime} Mins",
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
 
 class TaskCard extends StatelessWidget {
@@ -629,14 +415,34 @@ class MileStoneCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                IconButton(
-                  onPressed: ontap,
-                  icon: const Icon(
-                    CupertinoIcons.forward,
-                    size: 25,
-                    color: Colors.white,
-                  ),
-                )
+                model.expiryAt.difference(DateTime.now()).inDays <= 0
+                    ? GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const MilestoneVerify(),
+                            ),
+                          );
+                        },
+                        child: const CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                            weight: 10,
+                            size: 30,
+                          ),
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: ontap,
+                        icon: const Icon(
+                          CupertinoIcons.forward,
+                          size: 25,
+                          color: Colors.white,
+                        ),
+                      )
               ],
             ),
             const SizedBox(

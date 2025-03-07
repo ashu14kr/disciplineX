@@ -14,7 +14,7 @@ class Task {
   }
 
   addTask(String name, String priority, int completionTime, String status,
-      int bet, String uid) async {
+      String mid, String uid) async {
     final docRef = db.collection("Tasks").doc();
 
     final task = {
@@ -24,7 +24,7 @@ class Task {
       "createdAt": DateTime.now().toIso8601String(),
       "completionTime": completionTime,
       "status": status,
-      "bet": bet,
+      "mid": mid,
       "uid": uid,
       "startedAt": null
     };
@@ -58,8 +58,21 @@ class Task {
         FirebaseFirestore.instance.collection('Milestones').doc(docId);
     final docSnapshot = await docRef.get();
     if (docSnapshot.exists) {
-      await docRef
-          .update({"active": 7 - expireAt.difference(DateTime.now()).inDays});
+      await docRef.update({
+        "active": FieldValue.arrayUnion(
+            [7 - expireAt.difference(DateTime.now()).inDays])
+      });
+    } else {
+      print("Document not found");
+    }
+  }
+
+  updateMilestoneActivity(String docId, int activities) async {
+    final docRef =
+        FirebaseFirestore.instance.collection('Milestones').doc(docId);
+    final docSnapshot = await docRef.get();
+    if (docSnapshot.exists) {
+      await docRef.update({"activities": activities});
     } else {
       print("Document not found");
     }
@@ -85,12 +98,13 @@ class Task {
     }
   }
 
-  Future<List<TaskModel>?> getTasks(String uid) async {
+  Future<List<TaskModel>?> getTasks(String uid, String mid) async {
     try {
       final querySnapshot = await db
           .collection("Tasks")
           .where("uid", isEqualTo: uid)
           .where("status", isEqualTo: "NotCompleted")
+          .where("mid", isEqualTo: mid)
           .get();
 
       final tasks = querySnapshot.docs.map((doc) {

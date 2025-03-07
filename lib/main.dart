@@ -1,4 +1,4 @@
-import 'package:anti_procastination/UiTesting/test_card.dart';
+import 'package:anti_procastination/UiTesting/test_roadmap.dart';
 import 'package:anti_procastination/controllers/cubit/milestone_cubit.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/firebase_options.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        // home: TestCards()
+        // home: const GoalProgressScreen()
         home: const SplashScreen(),
       ),
     );

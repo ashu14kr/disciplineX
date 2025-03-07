@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:anti_procastination/core/services/task.dart';
+import 'package:anti_procastination/models/milestone_model.dart';
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
 
 part 'tasks_state.dart';
@@ -18,14 +20,17 @@ class TasksCubit extends Cubit<TasksState> {
   int total = 0;
   String uuid = "";
 
-  void getTasks(String uid) async {
-    final tasks = await task.getTasks(uid);
+  void getTasks(String uid, ModelMilestone model, BuildContext context) async {
+    _timer?.cancel();
+    emit(TasksInitial());
+    final tasks = await task.getTasks(uid, model.id);
     uuid = uid;
     emit(TasksLoaded(task: tasks));
-    checkAndResumeTask(tasks);
+    checkAndResumeTask(tasks, model, context);
   }
 
-  checkAndResumeTask(List<TaskModel>? tasks) async {
+  checkAndResumeTask(List<TaskModel>? tasks, ModelMilestone model,
+      BuildContext context) async {
     if (tasks == null || tasks.isEmpty) return;
 
     TaskModel? ongoingTask;
@@ -49,17 +54,19 @@ class TasksCubit extends Cubit<TasksState> {
 
     if (remainingSecondsss <= 0) {
       task.updateTaskStatus(ongoingTask.id);
-      final utasks = await task.getTasks(uuid);
+      task.updateMileStone(model.id, model.expiryAt);
+      final utasks = await task.getTasks(uuid, model.id);
       emit(TasksLoaded(task: utasks));
       remainingSecondsss = 0;
     }
 
     if (remainingSecondsss > 0) {
-      startTimer(remainingSecondsss, tasks);
+      startTimer(remainingSecondsss, tasks, model, context);
     }
   }
 
-  void startTimer(int seconds, List<TaskModel>? tasks) {
+  void startTimer(int seconds, List<TaskModel>? tasks, ModelMilestone mid,
+      BuildContext context) {
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (remainingSecondsss > 0) {
@@ -73,7 +80,7 @@ class TasksCubit extends Cubit<TasksState> {
         );
       } else {
         timer.cancel();
-        checkAndResumeTask(tasks);
+        checkAndResumeTask(tasks, mid, context);
       }
     });
   }

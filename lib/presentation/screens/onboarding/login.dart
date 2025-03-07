@@ -2,6 +2,8 @@ import 'package:anti_procastination/auth_service.dart';
 import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/core/services/task.dart';
 import 'package:anti_procastination/presentation/screens/home/home.dart';
+import 'package:anti_procastination/presentation/screens/home/main_home.dart';
+import 'package:anti_procastination/presentation/screens/onboarding/splash.dart';
 import 'package:anti_procastination/storage/storage.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const Home()),
+          MaterialPageRoute(builder: (context) => const SplashScreen()),
         );
       } else {
         print("Sign-in failed!");

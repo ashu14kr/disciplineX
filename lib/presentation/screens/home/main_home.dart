@@ -1,3 +1,4 @@
+import 'package:anti_procastination/UiTesting/test_roadmap.dart';
 import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/controllers/cubit/milestone_cubit.dart';
 import 'package:anti_procastination/presentation/screens/home/add_milestone.dart';
@@ -88,7 +89,15 @@ class _MainHomeState extends State<MainHome> {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const GoalProgressScreen(),
+                              ),
+                            );
+                          },
                           icon: const Icon(
                             CupertinoIcons.graph_square,
                             size: 30,
@@ -150,7 +159,8 @@ class _MainHomeState extends State<MainHome> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const Home(),
+                                      builder: (context) =>
+                                          Home(model: state.milestone![index]),
                                     ),
                                   );
                                 },
