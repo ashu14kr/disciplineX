@@ -309,6 +309,7 @@ class MileStoneCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Container(
       height: 170,
       decoration: BoxDecoration(
@@ -350,7 +351,7 @@ class MileStoneCard extends StatelessWidget {
                   width: 20,
                 ),
                 SizedBox(
-                  width: 200,
+                  width: size.width / 2.3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -400,7 +401,7 @@ class MileStoneCard extends StatelessWidget {
                                 ),
                           ),
                           Text(
-                            "${model.expiryAt.difference(DateTime.now()).inDays} Days Left",
+                            "${model.expiryAt.difference(DateTime.now()).inDays < 0 ? "0" : model.expiryAt.difference(DateTime.now()).inDays} Days Left",
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
@@ -421,7 +422,9 @@ class MileStoneCard extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const MilestoneVerify(),
+                              builder: (context) => MilestoneVerificationScreen(
+                                model: model,
+                              ),
                             ),
                           );
                         },
@@ -467,7 +470,7 @@ class MileStoneCard extends StatelessWidget {
                       ),
                       child: Container(
                         height: 12,
-                        width: 44,
+                        width: size.width / 10.2,
                         decoration: BoxDecoration(
                           color: lis.contains(index)
                               ? Colors.green
@@ -574,9 +577,6 @@ class CustomFloatingBtn extends StatelessWidget {
     );
   }
 }
-
-
-
 
 // class RPSCustomPainter extends CustomPainter {
 //   @override

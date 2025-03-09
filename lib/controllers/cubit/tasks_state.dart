@@ -10,6 +10,8 @@ sealed class TasksState extends Equatable {
 
 final class TasksInitial extends TasksState {}
 
+final class TasksWaiting extends TasksState {}
+
 final class TasksLoaded extends TasksState {
   final List<TaskModel>? task;
 
@@ -29,4 +31,13 @@ final class TaskResumed extends TasksState {
 
   @override
   List<Object> get props => [remainingSeconds, progress, task ?? []];
+}
+
+final class TasksMinutes extends TasksState {
+  final List<TaskModel>? task;
+
+  const TasksMinutes({required this.task});
+
+  @override
+  List<Object> get props => [task ?? []];
 }

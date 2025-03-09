@@ -4,6 +4,7 @@ import 'package:anti_procastination/storage/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../../../controllers/cubit/milestone_cubit.dart';
@@ -48,7 +49,7 @@ class _AddMilestoneState extends State<AddMilestone> {
     {'art': CupertinoIcons.paintbrush},
   ];
 
-  IconData? selectedIcon; // Selected icon
+  // Selected icon
   String iconData = "code";
   String gradientData = "Red-Orange";
 
@@ -72,8 +73,6 @@ class _AddMilestoneState extends State<AddMilestone> {
     },
   ];
 
-  LinearGradient? selectedGradient;
-
   void createMilestone() async {
     if (name.text.isEmpty) {
       EasyLoading.showToast("Pls enter name");
@@ -92,6 +91,8 @@ class _AddMilestoneState extends State<AddMilestone> {
 
   @override
   Widget build(BuildContext context) {
+    IconData selectedIcon = iconsList.first.values.first;
+    LinearGradient selectedGradient = gradientsList.first.values.first;
     return Scaffold(
       backgroundColor: bgColor,
       bottomNavigationBar: GestureDetector(
@@ -126,11 +127,11 @@ class _AddMilestoneState extends State<AddMilestone> {
       appBar: AppBar(
         backgroundColor: bgColor,
         title: Text(
-          "Create Milestone",
-          style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
-              ),
+          'Create Milestone',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         centerTitle: true,
         leading: IconButton(

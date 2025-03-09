@@ -1,5 +1,6 @@
 import 'package:anti_procastination/presentation/screens/wallet/addbalance.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../constants.dart';
 
@@ -10,14 +11,25 @@ class Wallet extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: bgColor,
       appBar: AppBar(
         title: Text(
-          "WALLET",
-          style: Theme.of(context).textTheme.bodyLarge,
+          'Wallet',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: bgColor,
         elevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(
+            Icons.close,
+            size: 28,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(
@@ -36,7 +48,7 @@ class Wallet extends StatelessWidget {
                 style: Theme.of(context)
                     .textTheme
                     .displayLarge!
-                    .copyWith(fontWeight: FontWeight.w900),
+                    .copyWith(fontWeight: FontWeight.w900, color: Colors.white),
               ),
             ),
             const SizedBox(
@@ -61,27 +73,31 @@ class Wallet extends StatelessWidget {
                     child: Container(
                       height: size.height * 0.05,
                       width: size.width * 0.4,
-                      decoration: BoxDecoration(
-                        color: mainColor,
-                        borderRadius: const BorderRadius.only(
+                      decoration: const BoxDecoration(
+                        color: boxbgColor,
+                        borderRadius: BorderRadius.only(
                           topRight: Radius.circular(16),
                           bottomRight: Radius.circular(16),
                           bottomLeft: Radius.circular(16),
                           topLeft: Radius.circular(16),
                         ),
-                        border: Border.all(
-                          color: Colors.black,
-                          width: 2,
-                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.white,
+                            blurRadius: 0.3,
+                            offset: Offset(0.3, 0.3),
+                          )
+                        ],
                       ),
                       child: Center(
                         child: Text(
                           "Add Balance",
                           textAlign: TextAlign.center,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyLarge!
-                              .copyWith(fontWeight: FontWeight.w600),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge!.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
                         ),
                       ),
                     ),
@@ -89,27 +105,30 @@ class Wallet extends StatelessWidget {
                   Container(
                     height: size.height * 0.05,
                     width: size.width * 0.4,
-                    decoration: BoxDecoration(
-                      // color: const Color.fromARGB(255, 238, 255, 175),
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      color: boxbgColor,
+                      borderRadius: BorderRadius.only(
                         topRight: Radius.circular(16),
                         bottomRight: Radius.circular(16),
                         bottomLeft: Radius.circular(16),
                         topLeft: Radius.circular(16),
                       ),
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 2,
-                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.white,
+                          blurRadius: 0.3,
+                          offset: Offset(0.3, 0.3),
+                        )
+                      ],
                     ),
                     child: Center(
                       child: Text(
                         "Cash Out",
                         textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(fontWeight: FontWeight.w600),
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                       ),
                     ),
                   ),
@@ -122,9 +141,10 @@ class Wallet extends StatelessWidget {
             Text(
               "JAN 25",
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+              style: Theme.of(context)
+                  .textTheme
+                  .headlineSmall!
+                  .copyWith(fontWeight: FontWeight.w500, color: Colors.white),
             ),
             const SizedBox(
               height: 30,
@@ -132,26 +152,19 @@ class Wallet extends StatelessWidget {
             Container(
               height: 100,
               width: size.width * 0.9,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 2,
-                ),
-                borderRadius: const BorderRadius.only(
+              decoration: const BoxDecoration(
+                color: boxbgColor,
+                borderRadius: BorderRadius.only(
                   topRight: Radius.circular(16),
                   bottomRight: Radius.circular(16),
                   bottomLeft: Radius.circular(16),
                 ),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
-                    color: mainColor,
-                    blurRadius: 12,
-                    offset: Offset(
-                      4,
-                      4,
-                    ),
-                  ),
+                    color: Colors.white,
+                    blurRadius: 0.3,
+                    offset: Offset(0.3, 0.3),
+                  )
                 ],
               ),
               child: Padding(
@@ -205,13 +218,15 @@ class Wallet extends StatelessWidget {
                                         .textTheme
                                         .bodyLarge!
                                         .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.white),
                                   ),
                                   Text(
                                     "Deposit",
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(color: Colors.white),
                                   ),
                                 ],
                               ),
@@ -226,7 +241,7 @@ class Wallet extends StatelessWidget {
                                         .textTheme
                                         .labelMedium!
                                         .copyWith(
-                                          color: Colors.black,
+                                          color: Colors.white,
                                           fontSize: 16,
                                         ),
                                   ),
@@ -273,8 +288,7 @@ class Wallet extends StatelessWidget {
                                     .textTheme
                                     .labelMedium!
                                     .copyWith(
-                                      color: const Color.fromARGB(
-                                          255, 111, 111, 111),
+                                      color: Colors.white,
                                       fontSize: 14,
                                     ),
                               ),

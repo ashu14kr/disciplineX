@@ -1,8 +1,11 @@
+import 'package:anti_procastination/models/analytics_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CalendarGrid extends StatefulWidget {
-  const CalendarGrid({super.key});
+  final AnalyticsModel model;
+  const CalendarGrid({super.key, required this.model});
 
   @override
   _CalendarGridState createState() => _CalendarGridState();
@@ -10,12 +13,17 @@ class CalendarGrid extends StatefulWidget {
 
 class _CalendarGridState extends State<CalendarGrid> {
   final ScrollController _scrollController = ScrollController();
+  List<DateTime> done = [];
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToEnd();
+      widget.model.activeDays.forEach((e) {
+        done.add(DateFormat("dd-MM-yyyy").parse(e));
+      });
+      setState(() {});
     });
   }
 
@@ -27,15 +35,6 @@ class _CalendarGridState extends State<CalendarGrid> {
 
   @override
   Widget build(BuildContext context) {
-    List<DateTime> _done = [
-      DateTime(DateTime.now().year, 1, 2),
-      DateTime(DateTime.now().year, 1, 3),
-      DateTime(DateTime.now().year, 1, 4),
-      DateTime(DateTime.now().year, 1, 5),
-      DateTime(DateTime.now().year, 1, 6),
-      DateTime(DateTime.now().year, 1, 7),
-      DateTime(DateTime.now().year, 3, 4),
-    ];
     final DateTime startDate = DateTime(2024, 8, 1); // Jan 1st of current year
     final DateTime currentDate = DateTime.now();
     final int totalDays = currentDate.difference(startDate).inDays +
@@ -43,38 +42,44 @@ class _CalendarGridState extends State<CalendarGrid> {
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
-      child: GridView.builder(
-        controller: _scrollController,
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 7,
-          mainAxisSpacing: 2,
-          crossAxisSpacing: 2,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 100, // Set a maximum height
+          minHeight: 80, // Set a minimum height
         ),
-        itemCount: totalDays,
-        itemBuilder: (context, index) {
-          DateTime currentDay = startDate.add(Duration(days: index));
+        child: GridView.builder(
+          controller: _scrollController,
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 7,
+            mainAxisSpacing: 2,
+            crossAxisSpacing: 2,
+          ),
+          itemCount: totalDays,
+          itemBuilder: (context, index) {
+            DateTime currentDay = startDate.add(Duration(days: index));
 
-          // Check if the day is in _done list
-          bool isDone = _done.any((doneDay) =>
-              doneDay.year == currentDay.year &&
-              doneDay.month == currentDay.month &&
-              doneDay.day == currentDay.day);
+            // Check if the day is in _done list
+            bool isDone = done.any((doneDay) =>
+                doneDay.year == currentDay.year &&
+                doneDay.month == currentDay.month &&
+                doneDay.day == currentDay.day);
 
-          return SizedBox(
-            height: 2,
-            width: 2,
-            child: Container(
-              decoration: BoxDecoration(
-                color: isDone
-                    ? Colors.green
-                    : const Color.fromARGB(255, 67, 89, 69),
-                borderRadius: BorderRadius.circular(4),
+            return SizedBox(
+              height: 2,
+              width: 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDone
+                      ? Colors.green
+                      : const Color.fromARGB(255, 67, 89, 69),
+                  borderRadius: BorderRadius.circular(4),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

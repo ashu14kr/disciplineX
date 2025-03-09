@@ -20,6 +20,12 @@ class TasksCubit extends Cubit<TasksState> {
   int total = 0;
   String uuid = "";
 
+  void getWeeksData(String uid, ModelMilestone model) async {
+    emit(TasksWaiting());
+    final tasks = await task.getCompTasks(uid, model.id);
+    emit(TasksMinutes(task: tasks));
+  }
+
   void getTasks(String uid, ModelMilestone model, BuildContext context) async {
     _timer?.cancel();
     emit(TasksInitial());
@@ -55,6 +61,7 @@ class TasksCubit extends Cubit<TasksState> {
     if (remainingSecondsss <= 0) {
       task.updateTaskStatus(ongoingTask.id);
       task.updateMileStone(model.id, model.expiryAt);
+      task.updateDayMinutes(uuid, ongoingTask.completionTime.toDouble());
       final utasks = await task.getTasks(uuid, model.id);
       emit(TasksLoaded(task: utasks));
       remainingSecondsss = 0;

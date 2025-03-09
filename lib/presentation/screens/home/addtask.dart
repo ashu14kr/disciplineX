@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../../controllers/cubit/tasks_cubit.dart';
 import '../../../core/services/task.dart';
@@ -105,11 +106,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       ),
                     ),
                     Text(
-                      "Create New Task",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineSmall!
-                          .copyWith(color: Colors.white),
+                      'Create New Task',
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
                     ),
                     const Icon(
                       Icons.abc,

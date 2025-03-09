@@ -1,4 +1,4 @@
-import 'package:anti_procastination/UiTesting/test_roadmap.dart';
+import 'package:anti_procastination/controllers/cubit/analytics_cubit.dart';
 import 'package:anti_procastination/controllers/cubit/milestone_cubit.dart';
 import 'package:anti_procastination/controllers/cubit/tasks_cubit.dart';
 import 'package:anti_procastination/firebase_options.dart';
@@ -26,7 +26,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => TasksCubit()),
-        BlocProvider(create: (_) => MilestoneCubit())
+        BlocProvider(create: (_) => MilestoneCubit()),
+        BlocProvider(create: (_) => AnalyticsCubit())
       ],
       child: MaterialApp(
         title: 'DiscplineX',
@@ -36,7 +37,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        // home: const GoalProgressScreen()
+        // home: GoalRoadmapScreen()
         home: const SplashScreen(),
       ),
     );

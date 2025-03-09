@@ -1,4 +1,3 @@
-import 'package:anti_procastination/UiTesting/test_roadmap.dart';
 import 'package:anti_procastination/constants.dart';
 import 'package:anti_procastination/controllers/cubit/milestone_cubit.dart';
 import 'package:anti_procastination/presentation/screens/home/add_milestone.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../storage/model/local_user_model.dart';
 import '../../../storage/storage.dart';
+import '../analytics/analytics_screen.dart';
 import '../setting/profile.dart';
 import '../wallet/wallet.dart';
 import 'home_helper.dart';
@@ -93,8 +93,7 @@ class _MainHomeState extends State<MainHome> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    const GoalProgressScreen(),
+                                builder: (context) => const AnalyticsScreen(),
                               ),
                             );
                           },
