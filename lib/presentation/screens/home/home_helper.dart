@@ -210,7 +210,7 @@ class TaskCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 9),
                   SizedBox(
-                    width: 260,
+                    width: MediaQuery.of(context).size.width / 1.7,
                     child: Text(
                       model.name,
                       overflow: TextOverflow.ellipsis,

@@ -38,7 +38,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Analytics', style: TextStyle(color: Colors.white)),
+        title: Text(
+          "Analytics",
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
         backgroundColor: bgColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
@@ -49,10 +55,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         child: BlocBuilder<AnalyticsCubit, AnalyticsState>(
           builder: (context, state) {
             if (state is AnalyticsInitial) {
-              return Container(
-                child: const Text(
-                  "ggg",
-                  style: TextStyle(color: Colors.white),
+              return SizedBox(
+                height: MediaQuery.of(context).size.height / 1.2,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: mainColor,
+                  ),
                 ),
               );
             } else if (state is AnalyticsLoaded) {

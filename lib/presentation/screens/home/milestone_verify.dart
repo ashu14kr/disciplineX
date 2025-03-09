@@ -3,6 +3,7 @@ import 'package:anti_procastination/models/milestone_model.dart';
 import 'package:anti_procastination/models/task_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 import '../../../controllers/cubit/tasks_cubit.dart';
@@ -140,13 +141,13 @@ class _MilestoneVerificationScreenState
                       icon: const Icon(Icons.close, color: Colors.white),
                       onPressed: () => Navigator.pop(context),
                     ),
-                    const Center(
+                    Center(
                       child: Text(
                         'Milestone Verification',
-                        style: TextStyle(
+                        style: GoogleFonts.poppins(
+                          fontWeight: FontWeight.w600,
                           color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
                         ),
                       ),
                     ),
@@ -160,7 +161,7 @@ class _MilestoneVerificationScreenState
                 BlocBuilder<TasksCubit, TasksState>(builder: (context, state) {
                   if (state is TasksWaiting) {
                     return Container(
-                      child: Text(
+                      child: const Text(
                         "data",
                         style: TextStyle(color: Colors.white),
                       ),
@@ -179,7 +180,7 @@ class _MilestoneVerificationScreenState
                     );
                   } else {
                     return Container(
-                      child: Text(
+                      child: const Text(
                         "data",
                         style: TextStyle(color: Colors.white),
                       ),
@@ -365,53 +366,92 @@ class _VerticalChartPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final values = weeklyData.values.toList();
     final labels = weeklyData.keys.toList();
-    final barWidth = size.width / values.length - 10;
-    final chartHeight = size.height - 40;
+    final barWidth = size.width / values.length - 15;
+    final chartHeight = size.height - 50;
     final valuePerUnit = chartHeight / maxValue;
 
+    // Draw background grid
     final gridPaint = Paint()
       ..color = Colors.white24
-      ..strokeWidth = 1;
+      ..strokeWidth = 0.8;
 
-    for (double i = 0; i <= maxValue; i += 50) {
+    for (double i = 0; i <= maxValue; i += 100) {
       final y = chartHeight - (i * valuePerUnit);
-      canvas.drawLine(
-        Offset(0, y),
-        Offset(size.width, y),
-        gridPaint,
-      );
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
 
-    // Draw bars
-    final barPaint = Paint()
-      ..color = barColor
-      ..style = PaintingStyle.fill;
+    // Draw gradient bars
+    final barGradient = LinearGradient(
+      colors: [
+        barColor.withOpacity(0.8),
+        barColor.withOpacity(0.4),
+      ],
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+    );
 
     for (int i = 0; i < values.length; i++) {
       final barHeight = values[i] * valuePerUnit;
-      final x = i * (barWidth + 10) + 5;
+      final x = i * (barWidth + 15) + 8;
 
       // Bar shadow
-      canvas.drawRect(
-        Rect.fromLTRB(x + 2, chartHeight - barHeight + 2, x + barWidth + 2,
-            chartHeight + 2),
-        barPaint..color = Colors.black.withOpacity(0.3),
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTRB(x + 3, chartHeight - barHeight + 3, x + barWidth + 3,
+              chartHeight + 3),
+          const Radius.circular(4),
+        ),
+        Paint()..color = Colors.black.withOpacity(0.3),
       );
 
-      // Main bar
-      canvas.drawRect(
-        Rect.fromLTRB(x, chartHeight - barHeight, x + barWidth, chartHeight),
-        barPaint..color = barColor,
+      // Main bar with gradient
+      final barRect =
+          Rect.fromLTRB(x, chartHeight - barHeight, x + barWidth, chartHeight);
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(barRect, const Radius.circular(4)),
+        Paint()..shader = barGradient.createShader(barRect),
       );
 
-      // Value labels
-      _drawText(
-        canvas,
-        text: '${values[i].toInt()}',
-        x: x + barWidth / 2,
-        y: chartHeight - barHeight - 20,
-        color: labelColor,
-      );
+      // Animated value popup
+      if (values[i] > 0) {
+        final bubblePaint = Paint()
+          ..color = barColor
+          ..style = PaintingStyle.fill;
+
+        final textY = chartHeight - barHeight - 25;
+
+        // Draw connecting line
+        canvas.drawLine(
+          Offset(x + barWidth / 2, chartHeight - barHeight),
+          Offset(x + barWidth / 2, textY + 15),
+          Paint()
+            ..color = barColor.withOpacity(0.5)
+            ..strokeWidth = 1,
+        );
+
+        // Draw value bubble
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromCenter(
+              center: Offset(x + barWidth / 2, textY),
+              width: 40,
+              height: 20,
+            ),
+            const Radius.circular(10),
+          ),
+          bubblePaint,
+        );
+
+        _drawText(
+          canvas,
+          text: '${values[i].toInt()}',
+          x: x + barWidth / 2,
+          y: textY - 6,
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.bold,
+        );
+      }
 
       // Day labels
       _drawText(
@@ -425,16 +465,26 @@ class _VerticalChartPainter extends CustomPainter {
     }
   }
 
-  void _drawText(Canvas canvas,
-      {required String text,
-      required double x,
-      required double y,
-      required Color color,
-      double fontSize = 14}) {
+  void _drawText(
+    Canvas canvas, {
+    required String text,
+    required double x,
+    required double y,
+    required Color color,
+    double fontSize = 14,
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
     final textStyle = TextStyle(
       color: color,
       fontSize: fontSize,
-      fontWeight: FontWeight.w500,
+      fontWeight: fontWeight,
+      shadows: [
+        Shadow(
+          color: Colors.black.withOpacity(0.3),
+          blurRadius: 2,
+          offset: const Offset(1, 1),
+        )
+      ],
     );
 
     final textSpan = TextSpan(text: text, style: textStyle);

@@ -97,7 +97,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     SizedBox(
-                      width: 250,
+                      width: size.width / 1.65,
                       child: Center(
                         child: Text(
                           widget.model.name,
